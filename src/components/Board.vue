@@ -1,7 +1,17 @@
 <script setup lang="ts">
+import { ref } from "vue";
+import Piece from "@/components/Piece.vue";
 import { parseSquare, createBoard } from "@/utils";
 
 const squares = createBoard();
+const selectedPiece = ref(null);
+
+function selectPiece(piece: Piece) {
+  selectedPiece.value = piece;
+}
+function clearSelected() {
+    selectedPiece.value = null
+}
 
 function Move(from: string, to: string) {
   const source = parseSquare(from);
@@ -14,10 +24,10 @@ function Move(from: string, to: string) {
 </script>
 
 <template>
-  <div class="board">
+  <div class="board" @contextmenu.prevent="clearSelected">
     <div class="row" v-for="row in squares" :key="row">
       <div class="square" v-for="col in row" :key="`${col}${row}`">
-        <span :class="`piece ${col.color}`" v-if="col">{{ col.notation }}</span>
+        <Piece :piece="col" v-if="col" @selected="selectPiece" />
       </div>
     </div>
   </div>
@@ -35,20 +45,5 @@ function Move(from: string, to: string) {
 .row:nth-child(odd) .square:nth-child(even),
 .row:nth-child(even) .square:nth-child(odd) {
   background: #76adb7;
-}
-.piece {
-  height: 100%;
-  display: flex;
-  font-size: 35px;
-  font-weight: bold;
-  align-items: center;
-  justify-content: center;
-  -webkit-text-stroke: 1px #666;
-}
-.piece.white {
-  -webkit-text-fill-color: #fff;
-}
-.piece.black {
-  -webkit-text-fill-color: #222;
 }
 </style>
