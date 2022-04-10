@@ -1,22 +1,24 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import Piece from "@/components/Piece.vue";
+import Square from "@/components/Square.vue";
 import { parseSquare, createBoard } from "@/utils";
 
 const squares = createBoard();
 const selectedPiece = ref(null);
 
-function selectPiece(piece: Piece) {
-  selectedPiece.value = piece;
+function selectPiece(square: Square) {
+  selectedPiece.value = square;
 }
 function clearSelected() {
-    selectedPiece.value = null
+  selectedPiece.value = null;
 }
 
-function Move(from: string, to: string) {
-  const source = parseSquare(from);
-  const dest = parseSquare(to);
+function placePiece(destination: Square) {
+  Move(selectedPiece.value, destination);
+  clearSelected();
+}
 
+function Move(source: Square, dest: Square) {
   const piece = squares.value[source.row][source.col];
   squares.value[dest.row][dest.col] = piece;
   squares.value[source.row][source.col] = null;
@@ -25,10 +27,16 @@ function Move(from: string, to: string) {
 
 <template>
   <div class="board" @contextmenu.prevent="clearSelected">
-    <div class="row" v-for="row in squares" :key="row">
-      <div class="square" v-for="col in row" :key="`${col}${row}`">
-        <Piece :piece="col" v-if="col" @selected="selectPiece" />
-      </div>
+    <div class="row" v-for="(row, idx) in squares" :key="idx">
+      <Square
+        v-for="(piece, col) in row"
+        :key="`${col}${idx}`"
+        :piece="piece"
+        :col="col"
+        :row="idx"
+        @selected="selectPiece"
+        @place="placePiece"
+      />
     </div>
   </div>
 </template>

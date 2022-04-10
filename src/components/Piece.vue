@@ -7,17 +7,14 @@ const props = defineProps<{
 </script>
 
 <template>
-  <span
-    @click="$emit('selected', piece)"
-    :class="`piece
-    ${piece.color}`"
-  >
+  <span :class="`piece ${piece.color}`">
     {{ piece.notation }}
   </span>
 </template>
 
 <style>
 .piece {
+  cursor: grab;
   height: 100%;
   display: flex;
   font-size: 35px;

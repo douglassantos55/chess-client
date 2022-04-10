@@ -1,66 +1,59 @@
 import { describe, it, expect } from "vitest";
 
-import { piece, createBoard } from "@/utils";
+import { createBoard } from "@/utils";
 import { mount } from "@vue/test-utils";
 import Board from "@/components/Board.vue";
 
 describe("Board", () => {
-    it("starts with pieces at initial position", () => {
-        const wrapper = mount(Board);
-        expect(createBoard().value).toEqual(wrapper.vm.squares);
-    });
+  it("starts with pieces at initial position", () => {
+    const wrapper = mount(Board);
+    expect(createBoard().value).toEqual(wrapper.vm.squares);
+  });
 
-    it("selects pieces", async () => {
-        const board = mount(Board);
-        const piece = board.get(".piece");
-        const expected = piece.getCurrentComponent()?.props.piece
+  it("selects pieces", async () => {
+    const board = mount(Board);
+    const piece = board.get(".piece");
 
-        await piece.trigger("click");
-        expect(board.vm.selectedPiece).toEqual(expected)
-    });
+    await piece.trigger("click");
+    expect(board.vm.selectedPiece).toEqual({ col: "a", row: 0 });
+  });
 
-    it('updates selected when another piece is selected', async () => {
-        const board = mount(Board);
+  it("updates selected when another piece is selected", async () => {
+    const board = mount(Board);
 
-        await board.get(".piece").trigger('click');
-        expect(board.vm.selectedPiece).toEqual({
-            color: 'white',
-            notation: 'R',
-        })
+    await board.get(".piece").trigger("click");
+    expect(board.vm.selectedPiece).toEqual({ col: "a", row: 0 });
 
-        await board.get(".piece.black").trigger('click');
-        expect(board.vm.selectedPiece).toEqual({
-            color: 'black',
-            notation: 'p',
-        })
-    })
+    await board.get(".piece.black").trigger("click");
+    expect(board.vm.selectedPiece).toEqual({ col: "a", row: 6 });
+  });
 
-    it('clears selected piece', () => {
-        const board = mount(Board)
-        board.vm.selectedPiece = { color: 'white', notation: 'K' }
+  it("clears selected piece", () => {
+    const board = mount(Board);
+    board.vm.selectedPiece = { col: "a", row: 0 };
 
-        board.trigger('contextmenu')
-        expect(board.vm.selectedPiece).to.be.null
-    })
+    board.trigger("contextmenu");
+    expect(board.vm.selectedPiece).to.be.null;
+  });
 
-    it("moves pieces", () => {
-        const board = mount(Board);
+  it("moves selected piece", async () => {
+    const board = mount(Board);
 
-        board.vm.Move("e2", "e4");
-        board.vm.Move("e7", "e5");
-        board.vm.Move("b1", "c3");
-        board.vm.Move("g8", "f6");
+    await board.get(".piece.black").trigger("click");
+    await board.get(".square.a5").trigger("click");
 
-        expect(board.vm.squares[1]["e"]).to.be.null;
-        expect(board.vm.squares[3]["e"]).toEqual(piece("p", "white"));
+    expect(board.get(".square.a5").text()).toContain("p");
+    expect(board.get(".square.a5").html()).toContain(
+      'span class="piece black"'
+    );
+  });
 
-        expect(board.vm.squares[6]["e"]).to.be.null;
-        expect(board.vm.squares[4]["e"]).toEqual(piece("p", "black"));
+  it("clears selected piece after moving", async () => {
+    const board = mount(Board);
 
-        expect(board.vm.squares[0]["b"]).to.be.null;
-        expect(board.vm.squares[2]["c"]).toEqual(piece("N", "white"));
+    await board.get(".piece.black").trigger("click");
+    await board.get(".square.a5").trigger("click");
 
-        expect(board.vm.squares[7]["g"]).to.be.null;
-        expect(board.vm.squares[5]["f"]).toEqual(piece("N", "black"));
-    });
+    expect(board.vm.selectedPiece).toBe(null);
+  });
 });

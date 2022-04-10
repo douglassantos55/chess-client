@@ -14,18 +14,4 @@ describe("Piece", () => {
     expect(piece.classes()).toContain("piece");
     expect(piece.classes()).toContain("black");
   });
-
-  it("dispatches selected event", async () => {
-    const piece = mount(Piece, {
-      props: {
-        piece: { notation: "K", color: "black" },
-      },
-    });
-
-    await piece.trigger("click");
-    expect(piece.emitted().selected).toHaveLength(1);
-    expect(piece.emitted().selected[0]).toEqual([
-      { notation: "K", color: "black" },
-    ]);
-  });
 });
