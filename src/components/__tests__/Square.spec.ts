@@ -31,4 +31,47 @@ describe("Square", () => {
 
     expect(square.find(".piece").exists()).toBe(false);
   });
+
+  it("dispatches `selected` if empty", () => {
+    const square = mount(Square, {
+      props: { row: 6, col: "e" },
+    });
+
+    square.get(".square").trigger("click");
+
+    expect(square.emitted().selected).toHaveLength(1);
+    expect(square.emitted().selected[0]).toEqual([
+      { piece: undefined, square: { col: "e", row: 6 } },
+    ]);
+  });
+
+  it("dispatches `selected` if not empty", () => {
+    const square = mount(Square, {
+      props: { row: 0, col: "c", piece: { notation: "K", color: "white" } },
+    });
+
+    square.get(".square").trigger("click");
+    expect(square.emitted().selected).toHaveLength(1);
+    expect(square.emitted().selected[0]).toEqual([
+      {
+        piece: { notation: "K", color: "white" },
+        square: { col: "c", row: 0 },
+      },
+    ]);
+  });
+
+  it("dispatches `selected` if click on piece", () => {
+    const square = mount(Square, {
+      props: { row: 2, col: "g", piece: { notation: "R", color: "black" } },
+    });
+
+    square.get(".piece").trigger("click");
+    expect(square.emitted().selected).toHaveLength(1);
+    expect(square.emitted().selected[0]).toEqual([
+      {
+        piece: { notation: "R", color: "black" },
+        square: { col: "g", row: 2 },
+      },
+    ]);
+  });
 });

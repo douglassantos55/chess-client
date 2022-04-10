@@ -9,21 +9,20 @@ const props = defineProps<{
   row: number;
 }>();
 
+type SelectedEvent = {
+  piece?: PieceType;
+  square: Square;
+};
+
 const emit = defineEmits<{
-  (e: "selected", square: Square): void;
-  (e: "place", square: Square): void;
+  (e: "selected", evt: SelectedEvent): void;
 }>();
 
 const notation = computed(() => props.col + (props.row + 1));
 
 function select() {
   const square = { col: props.col, row: props.row };
-
-  if (props.piece) {
-    emit("selected", square);
-  } else {
-    emit("place", square);
-  }
+  emit("selected", { square, piece: props.piece });
 }
 </script>
 

@@ -1,21 +1,26 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import Square from "@/components/Square.vue";
-import { parseSquare, createBoard } from "@/utils";
+import { createBoard } from "@/utils";
 
 const squares = createBoard();
 const selectedPiece = ref(null);
 
-function selectPiece(square: Square) {
-  selectedPiece.value = square;
-}
-function clearSelected() {
-  selectedPiece.value = null;
+function selectedSquare({ piece, square }) {
+  if (selectedPiece.value && selectedPiece.value.piece) {
+    if (!piece || piece.color != selectedPiece.value.piece.color) {
+      Move(selectedPiece.value.square, square);
+      clearSelected();
+    } else {
+      selectedPiece.value = { piece, square };
+    }
+  } else if (piece) {
+    selectedPiece.value = { piece, square };
+  }
 }
 
-function placePiece(destination: Square) {
-  Move(selectedPiece.value, destination);
-  clearSelected();
+function clearSelected() {
+  selectedPiece.value = null;
 }
 
 function Move(source: Square, dest: Square) {
@@ -34,8 +39,7 @@ function Move(source: Square, dest: Square) {
         :piece="piece"
         :col="col"
         :row="idx"
-        @selected="selectPiece"
-        @place="placePiece"
+        @selected="selectedSquare"
       />
     </div>
   </div>
