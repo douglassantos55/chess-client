@@ -1,3 +1,4 @@
+import Straight from '@/straight'
 import Forward, { Direction } from '@/forward'
 import type { Color, Piece, Board, Square, Movement } from "@/types";
 
@@ -20,14 +21,14 @@ export function parseSquare(square: string): Square | null {
 export function createBoard(): Board {
   return [
     {
-      a: piece("R", "white", new Forward(Direction.Up)),
+      a: piece("R", "white", new Straight()),
       b: piece("N", "white", new Forward(Direction.Up)),
       c: piece("B", "white", new Forward(Direction.Up)),
       d: piece("Q", "white", new Forward(Direction.Up)),
       e: piece("K", "white", new Forward(Direction.Up)),
       f: piece("B", "white", new Forward(Direction.Up)),
       g: piece("N", "white", new Forward(Direction.Up)),
-      h: piece("R", "white", new Forward(Direction.Up)),
+      h: piece("R", "white", new Straight()),
     },
     {
       a: piece("p", "white", new Forward(Direction.Up)),
@@ -90,14 +91,14 @@ export function createBoard(): Board {
       h: piece("p", "black", new Forward(Direction.Down)),
     },
     {
-      a: piece("R", "black", new Forward(Direction.Down)),
+      a: piece("R", "black", new Straight()),
       b: piece("N", "black", new Forward(Direction.Down)),
       c: piece("B", "black", new Forward(Direction.Down)),
       d: piece("Q", "black", new Forward(Direction.Down)),
       e: piece("K", "black", new Forward(Direction.Down)),
       f: piece("B", "black", new Forward(Direction.Down)),
       g: piece("N", "black", new Forward(Direction.Down)),
-      h: piece("R", "black", new Forward(Direction.Down)),
+      h: piece("R", "black", new Straight()),
     },
   ];
 }

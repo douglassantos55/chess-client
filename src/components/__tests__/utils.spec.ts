@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { createBoard, parseSquare, piece } from "@/utils";
+import Straight from "@/straight";
 import Forward, { Direction } from "@/forward";
 
 describe("utils", () => {
@@ -18,14 +19,14 @@ describe("utils", () => {
   it("creates board at initial position", () => {
     expect(createBoard()).toEqual([
       {
-        a: piece("R", "white", new Forward(Direction.Up)),
+        a: piece("R", "white", new Straight()),
         b: piece("N", "white", new Forward(Direction.Up)),
         c: piece("B", "white", new Forward(Direction.Up)),
         d: piece("Q", "white", new Forward(Direction.Up)),
         e: piece("K", "white", new Forward(Direction.Up)),
         f: piece("B", "white", new Forward(Direction.Up)),
         g: piece("N", "white", new Forward(Direction.Up)),
-        h: piece("R", "white", new Forward(Direction.Up)),
+        h: piece("R", "white", new Straight()),
       },
       {
         a: piece("p", "white", new Forward(Direction.Up)),
@@ -88,14 +89,14 @@ describe("utils", () => {
         h: piece("p", "black", new Forward(Direction.Down)),
       },
       {
-        a: piece("R", "black", new Forward(Direction.Down)),
+        a: piece("R", "black", new Straight()),
         b: piece("N", "black", new Forward(Direction.Down)),
         c: piece("B", "black", new Forward(Direction.Down)),
         d: piece("Q", "black", new Forward(Direction.Down)),
         e: piece("K", "black", new Forward(Direction.Down)),
         f: piece("B", "black", new Forward(Direction.Down)),
         g: piece("N", "black", new Forward(Direction.Down)),
-        h: piece("R", "black", new Forward(Direction.Down)),
+        h: piece("R", "black", new Straight()),
       },
     ]);
   });

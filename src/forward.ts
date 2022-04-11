@@ -21,7 +21,6 @@ export default class implements Movement {
         for (let i = 1; i <= multiplier; i++) {
             const dest = from.row + this.direction * i
 
-            console.log(dest, from, board[dest][from.col])
             if (board[dest][from.col] == null) {
                 available.push({ col: from.col, row: dest })
             }
