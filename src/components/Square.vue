@@ -4,9 +4,10 @@ import type { Square, Piece as PieceType } from "@/types";
 import Piece from "@/components/Piece.vue";
 
 const props = defineProps<{
-  piece?: PieceType;
   col: string;
   row: number;
+  piece?: PieceType;
+  availableMoves?: Square[];
 }>();
 
 type SelectedEvent = {
@@ -20,6 +21,16 @@ const emit = defineEmits<{
 
 const notation = computed(() => props.col + (props.row + 1));
 
+const isAvailable = computed(() => {
+  if (!props.availableMoves) {
+    return false;
+  }
+
+  return !!props.availableMoves.find(
+    (square: Square) => square.col == props.col && square.row == props.row
+  );
+});
+
 function select() {
   const square = { col: props.col, row: props.row };
   emit("selected", { square, piece: props.piece });
@@ -27,7 +38,27 @@ function select() {
 </script>
 
 <template>
-  <div :class="`square ${notation}`" @click.self="select">
+  <div
+    class="square"
+    :class="[notation, { available: isAvailable }]"
+    @click.self="select"
+  >
     <Piece :piece="piece" v-if="piece" @click.self="select" />
   </div>
 </template>
+
+<style scoped>
+.square {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.available:before {
+    content: '';
+    width: 15px;
+    height: 15px;
+    display: block;
+    background: #bbb;
+    border-radius: 100%;
+}
+</style>

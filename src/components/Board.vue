@@ -3,8 +3,19 @@ import { ref } from "vue";
 import Square from "@/components/Square.vue";
 import { createBoard } from "@/utils";
 
-const squares = createBoard();
+const board = ref(createBoard());
 const selectedPiece = ref(null);
+const availableMoves = ref([]);
+
+function showAvailableMoves() {
+    const selected = selectedPiece.value
+
+    if (!selected || !selected.piece) {
+        return
+    }
+
+    availableMoves.value = selected.piece.movement.getAvailableMoves(selected.square, board.value);
+}
 
 function selectedSquare({ piece, square }) {
   if (selectedPiece.value && selectedPiece.value.piece) {
@@ -13,32 +24,36 @@ function selectedSquare({ piece, square }) {
       clearSelected();
     } else {
       selectedPiece.value = { piece, square };
+      showAvailableMoves();
     }
   } else if (piece) {
     selectedPiece.value = { piece, square };
+    showAvailableMoves();
   }
 }
 
 function clearSelected() {
   selectedPiece.value = null;
+  availableMoves.value = [];
 }
 
 function Move(source: Square, dest: Square) {
-  const piece = squares.value[source.row][source.col];
-  squares.value[dest.row][dest.col] = piece;
-  squares.value[source.row][source.col] = null;
+  const piece = board.value[source.row][source.col];
+  board.value[dest.row][dest.col] = piece;
+  board.value[source.row][source.col] = null;
 }
 </script>
 
 <template>
   <div class="board" @contextmenu.prevent="clearSelected">
-    <div class="row" v-for="(row, idx) in squares" :key="idx">
+    <div class="row" v-for="(row, idx) in board" :key="idx">
       <Square
         v-for="(piece, col) in row"
         :key="`${col}${idx}`"
         :piece="piece"
         :col="col"
         :row="idx"
+        :availableMoves="availableMoves"
         @selected="selectedSquare"
       />
     </div>

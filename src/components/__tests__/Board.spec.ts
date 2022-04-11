@@ -7,14 +7,14 @@ import Board from "@/components/Board.vue";
 describe("Board", () => {
   it("starts with pieces at initial position", () => {
     const wrapper = mount(Board);
-    expect(createBoard().value).toEqual(wrapper.vm.squares);
+    expect(createBoard()).toEqual(wrapper.vm.board);
   });
 
   it("selects pieces", async () => {
     const board = mount(Board);
     await board.get(".piece").trigger("click");
 
-    expect(board.vm.selectedPiece).toEqual({
+    expect(board.vm.selectedPiece).toMatchObject({
       piece: { notation: "R", color: "white" },
       square: { col: "a", row: 0 },
     });
@@ -24,14 +24,14 @@ describe("Board", () => {
     const board = mount(Board);
     await board.get(".piece").trigger("click");
 
-    expect(board.vm.selectedPiece).toEqual({
+    expect(board.vm.selectedPiece).toMatchObject({
       square: { col: "a", row: 0 },
       piece: { notation: "R", color: "white" },
     });
 
     await board.get(".d1").trigger("click");
 
-    expect(board.vm.selectedPiece).toEqual({
+    expect(board.vm.selectedPiece).toMatchObject({
       square: { col: "d", row: 0 },
       piece: { notation: "Q", color: "white" },
     });
@@ -80,5 +80,23 @@ describe("Board", () => {
     expect(piece.exists()).toBe(true);
     expect(piece.classes()).toContain("white");
     expect(piece.classes()).not.toContain("black");
+  });
+
+  it("shows available moves", async () => {
+    const board = mount(Board);
+    await board.get(".e2").trigger("click");
+
+    expect(board.get(".e3").classes()).toContain("available");
+    expect(board.get(".e4").classes()).toContain("available");
+  });
+
+  it("resets available moves", async () => {
+    const board = mount(Board);
+
+    await board.get(".e2").trigger("click");
+    expect(board.findAll(".available")).toHaveLength(2);
+
+    await board.get(".a1").trigger("click");
+    expect(board.findAll(".available")).toHaveLength(0);
   });
 });

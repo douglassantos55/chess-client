@@ -12,15 +12,11 @@ defineProps<{
   </span>
 </template>
 
-<style>
+<style scoped>
 .piece {
   cursor: grab;
-  height: 100%;
-  display: flex;
   font-size: 35px;
   font-weight: bold;
-  align-items: center;
-  justify-content: center;
   -webkit-text-stroke: 1px #666;
 }
 .piece.white {
