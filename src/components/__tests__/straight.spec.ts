@@ -1,13 +1,75 @@
 import { describe, it, expect } from 'vitest'
 import Straight from '@/straight'
-import { createBoard } from '@/utils'
+import { createBoard, piece } from '@/utils'
 
 describe('Straight', () => {
-    it('moves horizontally', () => {
+    it('avaible moves at middle of the board', () => {
+        const straight = new Straight()
+        const board = createBoard()
 
+        board[0]['a'] = null
+        board[3]['d'] = piece('R', 'white', straight)
+        const result = straight.getAvailableMoves({ col: 'd', row: 3 }, board)
+
+        expect(result).toHaveLength(11)
+
+        expect(result).toContainEqual({ col: 'd', row: 2 })
+        expect(result).toContainEqual({ col: 'd', row: 4 })
+        expect(result).toContainEqual({ col: 'd', row: 5 })
+        expect(result).toContainEqual({ col: 'd', row: 6 })
+        expect(result).toContainEqual({ col: 'a', row: 3 })
+        expect(result).toContainEqual({ col: 'b', row: 3 })
+        expect(result).toContainEqual({ col: 'c', row: 3 })
+        expect(result).toContainEqual({ col: 'e', row: 3 })
+        expect(result).toContainEqual({ col: 'f', row: 3 })
+        expect(result).toContainEqual({ col: 'g', row: 3 })
+        expect(result).toContainEqual({ col: 'h', row: 3 })
     })
 
-    it('moves vertically', () => {
+    it('avaible moves at left corner of the board', () => {
+        const straight = new Straight()
+        const board = createBoard()
+
+        board[0]['a'] = null
+        board[2]['a'] = piece('R', 'white', straight)
+        const result = straight.getAvailableMoves({ col: 'a', row: 2 }, board)
+
+        expect(result).toHaveLength(11)
+
+        expect(result).toContainEqual({ col: 'a', row: 3 })
+        expect(result).toContainEqual({ col: 'a', row: 4 })
+        expect(result).toContainEqual({ col: 'a', row: 5 })
+        expect(result).toContainEqual({ col: 'a', row: 6 })
+        expect(result).toContainEqual({ col: 'b', row: 2 })
+        expect(result).toContainEqual({ col: 'c', row: 2 })
+        expect(result).toContainEqual({ col: 'd', row: 2 })
+        expect(result).toContainEqual({ col: 'e', row: 2 })
+        expect(result).toContainEqual({ col: 'f', row: 2 })
+        expect(result).toContainEqual({ col: 'g', row: 2 })
+        expect(result).toContainEqual({ col: 'h', row: 2 })
+    })
+
+    it('avaible moves at right corner of the board', () => {
+        const straight = new Straight()
+        const board = createBoard()
+
+        board[0]['a'] = null
+        board[2]['h'] = piece('R', 'white', straight)
+        const result = straight.getAvailableMoves({ col: 'h', row: 2 }, board)
+
+        expect(result).toHaveLength(11)
+
+        expect(result).toContainEqual({ col: 'h', row: 3 })
+        expect(result).toContainEqual({ col: 'h', row: 4 })
+        expect(result).toContainEqual({ col: 'h', row: 5 })
+        expect(result).toContainEqual({ col: 'h', row: 6 })
+        expect(result).toContainEqual({ col: 'b', row: 2 })
+        expect(result).toContainEqual({ col: 'c', row: 2 })
+        expect(result).toContainEqual({ col: 'd', row: 2 })
+        expect(result).toContainEqual({ col: 'e', row: 2 })
+        expect(result).toContainEqual({ col: 'f', row: 2 })
+        expect(result).toContainEqual({ col: 'g', row: 2 })
+        expect(result).toContainEqual({ col: 'a', row: 2 })
     })
 
     it('blocks at same color piece', () => {
