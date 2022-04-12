@@ -1,8 +1,12 @@
-import Straight from '@/straight'
-import Forward, { Direction } from '@/forward'
+import Straight from "@/straight";
+import Forward, { Direction } from "@/forward";
 import type { Color, Piece, Board, Square, Movement } from "@/types";
 
-export function piece(notation: string, color: Color, movement: Movement): Piece {
+export function piece(
+  notation: string,
+  color: Color,
+  movement: Movement
+): Piece {
   return { color, notation, movement };
 }
 

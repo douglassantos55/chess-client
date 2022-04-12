@@ -54,11 +54,11 @@ function select() {
   justify-content: center;
 }
 .available:before {
-    content: '';
-    width: 15px;
-    height: 15px;
-    display: block;
-    background: #bbb;
-    border-radius: 100%;
+  content: "";
+  width: 15px;
+  height: 15px;
+  display: block;
+  background: #bbb;
+  border-radius: 100%;
 }
 </style>

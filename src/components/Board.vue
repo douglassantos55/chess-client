@@ -8,13 +8,16 @@ const selectedPiece = ref(null);
 const availableMoves = ref([]);
 
 function showAvailableMoves() {
-    const selected = selectedPiece.value
+  const selected = selectedPiece.value;
 
-    if (!selected || !selected.piece) {
-        return
-    }
+  if (!selected || !selected.piece) {
+    return;
+  }
 
-    availableMoves.value = selected.piece.movement.getAvailableMoves(selected.square, board.value);
+  availableMoves.value = selected.piece.movement.getAvailableMoves(
+    selected.square,
+    board.value
+  );
 }
 
 function selectedSquare({ piece, square }) {

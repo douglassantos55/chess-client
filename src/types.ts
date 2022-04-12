@@ -12,12 +12,11 @@ export interface Square {
 }
 
 export type Row = {
-    [col: string]: Piece | null
-}
+  [col: string]: Piece | null;
+};
 
-export type Board = Row[]
+export type Board = Row[];
 
 export interface Movement {
-    getAvailableMoves(from: Square, board: Board): Square[]
+  getAvailableMoves(from: Square, board: Board): Square[];
 }
-
