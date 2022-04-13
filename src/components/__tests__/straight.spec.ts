@@ -163,4 +163,18 @@ describe("Straight", () => {
 
     expect(result).toHaveLength(0);
   });
+
+  it("moves only two squares", () => {
+    const straight = new Straight(2);
+    const board = createBoard();
+
+    board[2]["h"] = piece("random", "white", straight);
+    const result = straight.getAvailableMoves({ col: "h", row: 2 }, board);
+
+    expect(result).toHaveLength(4);
+    expect(result).toContainEqual({ col: "h", row: 3 });
+    expect(result).toContainEqual({ col: "h", row: 4 });
+    expect(result).toContainEqual({ col: "g", row: 2 });
+    expect(result).toContainEqual({ col: "f", row: 2 });
+  });
 });

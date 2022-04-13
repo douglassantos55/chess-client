@@ -223,4 +223,16 @@ describe("Diagonal", () => {
 
     expect(result).toHaveLength(0);
   });
+
+  it("moves only two squares", () => {
+    const diagonal = new Diagonal(2);
+    const board = createBoard();
+
+    board[2]["h"] = piece("random", "white", diagonal);
+    const result = diagonal.getAvailableMoves({ col: "h", row: 2 }, board);
+
+    expect(result).toHaveLength(2);
+    expect(result).toContainEqual({ col: "g", row: 3 });
+    expect(result).toContainEqual({ col: "f", row: 4 });
+  });
 });
