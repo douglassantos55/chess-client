@@ -19,7 +19,7 @@ export default class implements Movement {
   getVerticalMoves(from: Square, board: Board) {
     const available = [];
     const piece = board[from.row][from.col];
-    const upLimit = this.squares ? from.row - this.squares : 0;
+    const upLimit = Math.max(0, this.squares ? from.row - this.squares : 0);
 
     // up
     for (let i = from.row - 1; i >= upLimit; i--) {
@@ -35,7 +35,7 @@ export default class implements Movement {
     }
 
     // down
-    const downLimit = this.squares ? from.row + this.squares : 7;
+    const downLimit = Math.min(7, this.squares ? from.row + this.squares : 7);
 
     for (let i = from.row + 1; i <= downLimit; i++) {
       const p = board[i][from.col];
@@ -55,11 +55,11 @@ export default class implements Movement {
   getHorizontalMoves(from: Square, board: Board): Square[] {
     const available = [];
     const piece = board[from.row][from.col];
+    const source = from.col.charCodeAt(0);
 
     // left
-    const leftLimit = this.squares
-      ? from.col.charCodeAt(0) - this.squares
-      : "a".charCodeAt(0);
+    const a = "a".charCodeAt(0);
+    const leftLimit = Math.max(a, this.squares ? source - this.squares : a);
 
     for (let c = from.col.charCodeAt(0) - 1; c >= leftLimit; c--) {
       const col = String.fromCharCode(c);
@@ -76,9 +76,8 @@ export default class implements Movement {
     }
 
     // right
-    const rightLimit = this.squares
-      ? from.col.charCodeAt(0) + this.squares
-      : "h".charCodeAt(0);
+    const h = "h".charCodeAt(0);
+    const rightLimit = Math.min(h, this.squares ? source + this.squares : h);
 
     for (let c = from.col.charCodeAt(0) + 1; c <= rightLimit; c++) {
       const col = String.fromCharCode(c);

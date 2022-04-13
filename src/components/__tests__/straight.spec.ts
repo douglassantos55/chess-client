@@ -96,7 +96,7 @@ describe("Straight", () => {
     const straight = new Straight(1);
 
     const board = createBoard();
-    board[3]["e"] = null;
+    board[3]["e"] = piece("K", "white", straight);
 
     const result = straight.getAvailableMoves({ col: "e", row: 3 }, board);
 
@@ -105,5 +105,62 @@ describe("Straight", () => {
     expect(result).toContainEqual({ col: "e", row: 2 });
     expect(result).toContainEqual({ col: "d", row: 3 });
     expect(result).toContainEqual({ col: "f", row: 3 });
+  });
+
+  it("moves only allowed number of squares", () => {
+    const straight = new Straight(1);
+
+    const board = createBoard();
+    board[2]["e"] = piece("K", "white", straight);
+
+    const result = straight.getAvailableMoves({ col: "e", row: 2 }, board);
+
+    expect(result).toHaveLength(3);
+    expect(result).toContainEqual({ col: "e", row: 3 });
+    expect(result).toContainEqual({ col: "d", row: 2 });
+    expect(result).toContainEqual({ col: "f", row: 2 });
+  });
+
+  it("limited squares starting at 0", () => {
+    const straight = new Straight(1);
+    const result = straight.getAvailableMoves(
+      { col: "e", row: 0 },
+      createBoard()
+    );
+
+    expect(result).toHaveLength(0);
+  });
+
+  it("limited squares starting at 0", () => {
+    const straight = new Straight(1);
+
+    const result = straight.getAvailableMoves(
+      { col: "e", row: 7 },
+      createBoard()
+    );
+
+    expect(result).toHaveLength(0);
+  });
+
+  it("limited squares starting at 'a'", () => {
+    const straight = new Straight(1);
+
+    const result = straight.getAvailableMoves(
+      { col: "a", row: 0 },
+      createBoard()
+    );
+
+    expect(result).toHaveLength(0);
+  });
+
+  it("limited squares starting at 'h'", () => {
+    const straight = new Straight(1);
+
+    const result = straight.getAvailableMoves(
+      { col: "h", row: 7 },
+      createBoard()
+    );
+
+    expect(result).toHaveLength(0);
   });
 });
