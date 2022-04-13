@@ -1,21 +1,28 @@
 import type { Board, Movement, Square } from "./types";
 
 export default class implements Movement {
+  private squares: number | undefined = undefined;
+
+  constructor(squares?: number) {
+    this.squares = squares;
+  }
+
   getAvailableMoves(from: Square, board: Board): Square[] {
-    let available: Square[] = [];
+    const available: Square[] = [];
 
-    available = [...available, ...this.getVerticalMoves(from, board)];
-    available = [...available, ...this.getHorizontalMoves(from, board)];
-
-    return available;
+    return available.concat(
+      this.getVerticalMoves(from, board),
+      this.getHorizontalMoves(from, board)
+    );
   }
 
   getVerticalMoves(from: Square, board: Board) {
     const available = [];
     const piece = board[from.row][from.col];
+    const upLimit = this.squares ? from.row - this.squares : 0;
 
     // up
-    for (let i = from.row - 1; i >= 0; i--) {
+    for (let i = from.row - 1; i >= upLimit; i--) {
       const p = board[i][from.col];
       if (p == null) {
         available.push({ col: from.col, row: i });
@@ -28,7 +35,9 @@ export default class implements Movement {
     }
 
     // down
-    for (let i = from.row + 1; i < 8; i++) {
+    const downLimit = this.squares ? from.row + this.squares : 7;
+
+    for (let i = from.row + 1; i <= downLimit; i++) {
       const p = board[i][from.col];
       if (p == null) {
         available.push({ col: from.col, row: i });
@@ -48,7 +57,11 @@ export default class implements Movement {
     const piece = board[from.row][from.col];
 
     // left
-    for (let c = from.col.charCodeAt(0) - 1; c >= "a".charCodeAt(0); c--) {
+    const leftLimit = this.squares
+      ? from.col.charCodeAt(0) - this.squares
+      : "a".charCodeAt(0);
+
+    for (let c = from.col.charCodeAt(0) - 1; c >= leftLimit; c--) {
       const col = String.fromCharCode(c);
       const p = board[from.row][col];
 
@@ -63,7 +76,11 @@ export default class implements Movement {
     }
 
     // right
-    for (let c = from.col.charCodeAt(0) + 1; c <= "h".charCodeAt(0); c++) {
+    const rightLimit = this.squares
+      ? from.col.charCodeAt(0) + this.squares
+      : "h".charCodeAt(0);
+
+    for (let c = from.col.charCodeAt(0) + 1; c <= rightLimit; c++) {
       const col = String.fromCharCode(c);
       const p = board[from.row][col];
 

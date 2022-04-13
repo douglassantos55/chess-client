@@ -61,4 +61,12 @@ function select() {
   background: #bbb;
   border-radius: 100%;
 }
+.available:not(:empty):before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: #bbb;
+  border-radius: 100%;
+}
 </style>
