@@ -1,21 +1,29 @@
 import type { Board, Movement, Square } from "@/types";
 
 export default class implements Movement {
+  private squares: number | undefined;
+
+  constructor(squares?: number) {
+    this.squares = squares;
+  }
+
   getAvailableMoves(from: Square, board: Board): Square[] {
     return [
-      ...this.getSquaresTop(from, board),
+      ...this.getSquaresUp(from, board),
       ...this.getSquaresDown(from, board),
     ];
   }
 
-  getSquaresTop(from: Square, board: Board): Square[] {
+  getSquaresUp(from: Square, board: Board): Square[] {
     const available = [];
     const piece = board[from.row][from.col];
 
     let doneLeft = false;
     let doneRight = false;
 
-    for (let i = from.row + 1; i < 8; i++) {
+    const limit = Math.min(7, this.squares ? from.row + this.squares : 7);
+
+    for (let i = from.row + 1; i <= limit; i++) {
       if (!doneLeft) {
         const left = String.fromCharCode(
           from.col.charCodeAt(0) - (i - from.row)
@@ -65,7 +73,9 @@ export default class implements Movement {
     let doneLeft = false;
     let doneRight = false;
 
-    for (let i = from.row - 1; i >= 0; i--) {
+    const limit = Math.max(0, this.squares ? from.row - this.squares : 0);
+
+    for (let i = from.row - 1; i >= limit; i--) {
       if (!doneLeft) {
         const left = String.fromCharCode(
           from.col.charCodeAt(0) - (from.row - i)

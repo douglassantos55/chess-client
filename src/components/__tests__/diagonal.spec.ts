@@ -168,4 +168,59 @@ describe("Diagonal", () => {
     expect(result2).toContainEqual({ col: "g", row: 3 });
     expect(result2).toContainEqual({ col: "h", row: 4 });
   });
+
+  it("moves only allowed number of squares", () => {
+    const diagonal = new Diagonal(1);
+    const board = createBoard();
+
+    board[3]["e"] = piece("K", "white", diagonal);
+    const result = diagonal.getAvailableMoves({ col: "e", row: 3 }, board);
+
+    expect(result).toHaveLength(4);
+
+    expect(result).toContainEqual({ col: "d", row: 4 });
+    expect(result).toContainEqual({ col: "f", row: 4 });
+    expect(result).toContainEqual({ col: "d", row: 2 });
+    expect(result).toContainEqual({ col: "f", row: 2 });
+  });
+
+  it("limited movement starting at 0", () => {
+    const diagonal = new Diagonal(1);
+    const board = createBoard();
+
+    board[0]["c"] = piece("K", "white", diagonal);
+    const result = diagonal.getAvailableMoves({ col: "c", row: 0 }, board);
+
+    expect(result).toHaveLength(0);
+  });
+
+  it("limited movement starting at 8", () => {
+    const diagonal = new Diagonal(1);
+    const board = createBoard();
+
+    board[7]["c"] = piece("K", "black", diagonal);
+    const result = diagonal.getAvailableMoves({ col: "c", row: 7 }, board);
+
+    expect(result).toHaveLength(0);
+  });
+
+  it("limited movement starting at a", () => {
+    const diagonal = new Diagonal(1);
+    const board = createBoard();
+
+    board[0]["a"] = piece("K", "white", diagonal);
+    const result = diagonal.getAvailableMoves({ col: "a", row: 0 }, board);
+
+    expect(result).toHaveLength(0);
+  });
+
+  it("limited movement starting at h", () => {
+    const diagonal = new Diagonal(1);
+    const board = createBoard();
+
+    board[7]["h"] = piece("K", "black", diagonal);
+    const result = diagonal.getAvailableMoves({ col: "h", row: 7 }, board);
+
+    expect(result).toHaveLength(0);
+  });
 });
