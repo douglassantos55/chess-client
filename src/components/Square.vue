@@ -50,6 +50,7 @@ function select() {
 <style scoped>
 .square {
   display: flex;
+  position: relative;
   align-items: center;
   justify-content: center;
 }
@@ -58,15 +59,18 @@ function select() {
   width: 15px;
   height: 15px;
   display: block;
-  background: #bbb;
   border-radius: 100%;
+  background: rgba(0, 0, 0, 0.15);
 }
 .available:not(:empty):before {
   content: "";
   width: 100%;
   height: 100%;
   display: block;
-  background: #bbb;
+  background: none;
+  position: absolute;
   border-radius: 100%;
+  box-sizing: border-box;
+  border: 10px solid rgba(0, 0, 0, 0.15);
 }
 </style>

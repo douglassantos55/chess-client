@@ -14,6 +14,7 @@ defineProps<{
 
 <style scoped>
 .piece {
+  z-index: 1;
   cursor: grab;
   font-size: 35px;
   font-weight: bold;
