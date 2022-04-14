@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import L from "@/knight";
 import { createBoard, piece } from "@/utils";
+import { Color } from "@/types";
 
 describe("L", () => {
   it("moves up", () => {
@@ -55,7 +56,7 @@ describe("L", () => {
     const movement = new L();
     const board = createBoard();
 
-    board[4]["e"] = piece("N", "white", movement);
+    board[4]["e"] = piece("N", Color.White, movement);
     const result = movement.getAvailableMoves({ col: "e", row: 4 }, board);
 
     expect(result).toHaveLength(8);
@@ -73,7 +74,7 @@ describe("L", () => {
     const movement = new L();
     const board = createBoard();
 
-    board[4]["a"] = piece("N", "white", movement);
+    board[4]["a"] = piece("N", Color.White, movement);
     const result = movement.getAvailableMoves({ col: "a", row: 4 }, board);
 
     expect(result).toHaveLength(4);
@@ -87,7 +88,7 @@ describe("L", () => {
     const movement = new L();
     const board = createBoard();
 
-    board[4]["h"] = piece("N", "white", movement);
+    board[4]["h"] = piece("N", Color.White, movement);
     const result = movement.getAvailableMoves({ col: "h", row: 4 }, board);
 
     expect(result).toHaveLength(4);

@@ -3,13 +3,14 @@ import { createBoard, piece } from "@/utils";
 import Combined from "@/combined";
 import Straight from "@/straight";
 import Diagonal from "@/diagonal";
+import { Color } from "@/types";
 
 describe("Combined", () => {
   it("moves straight up/down and diagonally upright", () => {
     const board = createBoard();
     const combined = new Combined(new Diagonal(), new Straight());
 
-    board[2]["a"] = piece("Q", "white", combined);
+    board[2]["a"] = piece("Q", Color.White, combined);
     const result = combined.getAvailableMoves({ col: "a", row: 2 }, board);
 
     expect(result).toHaveLength(15);
@@ -37,7 +38,7 @@ describe("Combined", () => {
     const board = createBoard();
     const combined = new Combined(new Diagonal(), new Straight());
 
-    board[2]["h"] = piece("Q", "white", combined);
+    board[2]["h"] = piece("Q", Color.White, combined);
     const result = combined.getAvailableMoves({ col: "h", row: 2 }, board);
 
     expect(result).toHaveLength(15);
@@ -65,7 +66,7 @@ describe("Combined", () => {
     const board = createBoard();
     const combined = new Combined(new Diagonal(), new Straight());
 
-    board[4]["e"] = piece("Q", "white", combined);
+    board[4]["e"] = piece("Q", Color.White, combined);
     const result = combined.getAvailableMoves({ col: "e", row: 4 }, board);
 
     expect(result).toHaveLength(19);

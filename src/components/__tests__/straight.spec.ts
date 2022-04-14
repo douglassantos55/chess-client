@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import Straight from "@/straight";
 import { createBoard, piece } from "@/utils";
+import { Color } from "@/types";
 
 describe("Straight", () => {
   it("avaible moves at middle of the board", () => {
@@ -8,7 +9,7 @@ describe("Straight", () => {
     const board = createBoard();
 
     board[0]["a"] = null;
-    board[3]["d"] = piece("R", "white", straight);
+    board[3]["d"] = piece("R", Color.White, straight);
     const result = straight.getAvailableMoves({ col: "d", row: 3 }, board);
 
     expect(result).toHaveLength(11);
@@ -31,7 +32,7 @@ describe("Straight", () => {
     const board = createBoard();
 
     board[0]["a"] = null;
-    board[2]["a"] = piece("R", "white", straight);
+    board[2]["a"] = piece("R", Color.White, straight);
     const result = straight.getAvailableMoves({ col: "a", row: 2 }, board);
 
     expect(result).toHaveLength(11);
@@ -54,7 +55,7 @@ describe("Straight", () => {
     const board = createBoard();
 
     board[0]["a"] = null;
-    board[2]["h"] = piece("R", "white", straight);
+    board[2]["h"] = piece("R", Color.White, straight);
     const result = straight.getAvailableMoves({ col: "h", row: 2 }, board);
 
     expect(result).toHaveLength(11);
@@ -96,7 +97,7 @@ describe("Straight", () => {
     const straight = new Straight(1);
 
     const board = createBoard();
-    board[3]["e"] = piece("K", "white", straight);
+    board[3]["e"] = piece("K", Color.White, straight);
 
     const result = straight.getAvailableMoves({ col: "e", row: 3 }, board);
 
@@ -111,7 +112,7 @@ describe("Straight", () => {
     const straight = new Straight(1);
 
     const board = createBoard();
-    board[2]["e"] = piece("K", "white", straight);
+    board[2]["e"] = piece("K", Color.White, straight);
 
     const result = straight.getAvailableMoves({ col: "e", row: 2 }, board);
 
@@ -168,7 +169,7 @@ describe("Straight", () => {
     const straight = new Straight(2);
     const board = createBoard();
 
-    board[2]["h"] = piece("random", "white", straight);
+    board[2]["h"] = piece("random", Color.White, straight);
     const result = straight.getAvailableMoves({ col: "h", row: 2 }, board);
 
     expect(result).toHaveLength(4);

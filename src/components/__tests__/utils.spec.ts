@@ -5,6 +5,7 @@ import Combined from "@/combined";
 import Diagonal from "@/diagonal";
 import Knight from "@/knight";
 import Forward, { Direction } from "@/forward";
+import { Color } from "@/types";
 
 describe("utils", () => {
   it("parseSquare", () => {
@@ -22,24 +23,64 @@ describe("utils", () => {
   it("creates board at initial position", () => {
     expect(createBoard()).toEqual([
       {
-        a: piece("R", "white", new Straight()),
-        b: piece("N", "white", new Knight()),
-        c: piece("B", "white", new Diagonal()),
-        d: piece("Q", "white", new Combined(new Straight(), new Diagonal())),
-        e: piece("K", "white", new Combined(new Straight(1), new Diagonal(1))),
-        f: piece("B", "white", new Diagonal()),
-        g: piece("N", "white", new Knight()),
-        h: piece("R", "white", new Straight()),
+        a: piece("R", Color.White, new Straight()),
+        b: piece("N", Color.White, new Knight()),
+        c: piece("B", Color.White, new Diagonal()),
+        d: piece(
+          "Q",
+          Color.White,
+          new Combined(new Straight(), new Diagonal())
+        ),
+        e: piece(
+          "K",
+          Color.White,
+          new Combined(new Straight(1), new Diagonal(1))
+        ),
+        f: piece("B", Color.White, new Diagonal()),
+        g: piece("N", Color.White, new Knight()),
+        h: piece("R", Color.White, new Straight()),
       },
       {
-        a: piece("p", "white", new Forward(Direction.Up, { col: "a", row: 1 })),
-        b: piece("p", "white", new Forward(Direction.Up, { col: "b", row: 1 })),
-        c: piece("p", "white", new Forward(Direction.Up, { col: "c", row: 1 })),
-        d: piece("p", "white", new Forward(Direction.Up, { col: "d", row: 1 })),
-        e: piece("p", "white", new Forward(Direction.Up, { col: "e", row: 1 })),
-        f: piece("p", "white", new Forward(Direction.Up, { col: "f", row: 1 })),
-        g: piece("p", "white", new Forward(Direction.Up, { col: "g", row: 1 })),
-        h: piece("p", "white", new Forward(Direction.Up, { col: "h", row: 1 })),
+        a: piece(
+          "p",
+          Color.White,
+          new Forward(Direction.Up, { col: "a", row: 1 })
+        ),
+        b: piece(
+          "p",
+          Color.White,
+          new Forward(Direction.Up, { col: "b", row: 1 })
+        ),
+        c: piece(
+          "p",
+          Color.White,
+          new Forward(Direction.Up, { col: "c", row: 1 })
+        ),
+        d: piece(
+          "p",
+          Color.White,
+          new Forward(Direction.Up, { col: "d", row: 1 })
+        ),
+        e: piece(
+          "p",
+          Color.White,
+          new Forward(Direction.Up, { col: "e", row: 1 })
+        ),
+        f: piece(
+          "p",
+          Color.White,
+          new Forward(Direction.Up, { col: "f", row: 1 })
+        ),
+        g: piece(
+          "p",
+          Color.White,
+          new Forward(Direction.Up, { col: "g", row: 1 })
+        ),
+        h: piece(
+          "p",
+          Color.White,
+          new Forward(Direction.Up, { col: "h", row: 1 })
+        ),
       },
       {
         a: null,
@@ -84,54 +125,62 @@ describe("utils", () => {
       {
         a: piece(
           "p",
-          "black",
+          Color.Black,
           new Forward(Direction.Down, { col: "a", row: 6 })
         ),
         b: piece(
           "p",
-          "black",
+          Color.Black,
           new Forward(Direction.Down, { col: "b", row: 6 })
         ),
         c: piece(
           "p",
-          "black",
+          Color.Black,
           new Forward(Direction.Down, { col: "c", row: 6 })
         ),
         d: piece(
           "p",
-          "black",
+          Color.Black,
           new Forward(Direction.Down, { col: "d", row: 6 })
         ),
         e: piece(
           "p",
-          "black",
+          Color.Black,
           new Forward(Direction.Down, { col: "e", row: 6 })
         ),
         f: piece(
           "p",
-          "black",
+          Color.Black,
           new Forward(Direction.Down, { col: "f", row: 6 })
         ),
         g: piece(
           "p",
-          "black",
+          Color.Black,
           new Forward(Direction.Down, { col: "g", row: 6 })
         ),
         h: piece(
           "p",
-          "black",
+          Color.Black,
           new Forward(Direction.Down, { col: "h", row: 6 })
         ),
       },
       {
-        a: piece("R", "black", new Straight()),
-        b: piece("N", "black", new Knight()),
-        c: piece("B", "black", new Diagonal()),
-        d: piece("Q", "black", new Combined(new Straight(), new Diagonal())),
-        e: piece("K", "black", new Combined(new Straight(1), new Diagonal(1))),
-        f: piece("B", "black", new Diagonal()),
-        g: piece("N", "black", new Knight()),
-        h: piece("R", "black", new Straight()),
+        a: piece("R", Color.Black, new Straight()),
+        b: piece("N", Color.Black, new Knight()),
+        c: piece("B", Color.Black, new Diagonal()),
+        d: piece(
+          "Q",
+          Color.Black,
+          new Combined(new Straight(), new Diagonal())
+        ),
+        e: piece(
+          "K",
+          Color.Black,
+          new Combined(new Straight(1), new Diagonal(1))
+        ),
+        f: piece("B", Color.Black, new Diagonal()),
+        g: piece("N", Color.Black, new Knight()),
+        h: piece("R", Color.Black, new Straight()),
       },
     ]);
   });

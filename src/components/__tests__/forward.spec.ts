@@ -1,6 +1,7 @@
 import { expect, describe, it } from "vitest";
 import Forward, { Direction } from "@/forward";
 import { createBoard, piece } from "@/utils";
+import { Color } from "@/types";
 
 describe("Forward", () => {
   it("moves forward", () => {
@@ -46,7 +47,7 @@ describe("Forward", () => {
     board[6]["b"] = null;
     board[2]["b"] = piece(
       "p",
-      "black",
+      Color.Black,
       new Forward(Direction.Down, { col: "b", row: 6 })
     );
 
@@ -65,7 +66,7 @@ describe("Forward", () => {
     board[6]["g"] = null;
     board[2]["g"] = piece(
       "p",
-      "black",
+      Color.Black,
       new Forward(Direction.Down, { col: "g", row: 6 })
     );
 
@@ -84,14 +85,14 @@ describe("Forward", () => {
     board[6]["c"] = null;
     board[4]["c"] = piece(
       "p",
-      "black",
+      Color.Black,
       new Forward(Direction.Down, { col: "c", row: 4 })
     );
 
     board[6]["a"] = null;
     board[4]["a"] = piece(
       "p",
-      "black",
+      Color.Black,
       new Forward(Direction.Down, { col: "a", row: 4 })
     );
 
@@ -108,19 +109,19 @@ describe("Forward", () => {
     const board = createBoard();
 
     board[6]["e"] = null;
-    board[4]["e"] = piece("p", "black", forward);
+    board[4]["e"] = piece("p", Color.Black, forward);
 
     board[1]["d"] = null;
     board[3]["d"] = piece(
       "p",
-      "white",
+      Color.White,
       new Forward(Direction.Down, { col: "d", row: 1 })
     );
 
     board[1]["f"] = null;
     board[3]["f"] = piece(
       "p",
-      "white",
+      Color.White,
       new Forward(Direction.Down, { col: "f", row: 1 })
     );
 
