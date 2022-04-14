@@ -1,6 +1,7 @@
 import Straight from "@/straight";
 import Diagonal from "@/diagonal";
 import Combined from "@/combined";
+import Knight from "@/knight";
 import Forward, { Direction } from "@/forward";
 import type { Color, Piece, Board, Square, Movement } from "@/types";
 
@@ -28,12 +29,12 @@ export function createBoard(): Board {
   return [
     {
       a: piece("R", "white", new Straight()),
-      b: piece("N", "white", new Forward(Direction.Up, { col: "b", row: 0 })),
+      b: piece("N", "white", new Knight()),
       c: piece("B", "white", new Diagonal()),
       d: piece("Q", "white", new Combined(new Straight(), new Diagonal())),
       e: piece("K", "white", new Combined(new Straight(1), new Diagonal(1))),
       f: piece("B", "white", new Diagonal()),
-      g: piece("N", "white", new Forward(Direction.Up, { col: "g", row: 0 })),
+      g: piece("N", "white", new Knight()),
       h: piece("R", "white", new Straight()),
     },
     {
@@ -98,12 +99,12 @@ export function createBoard(): Board {
     },
     {
       a: piece("R", "black", new Straight()),
-      b: piece("N", "black", new Forward(Direction.Down, { col: "b", row: 7 })),
+      b: piece("N", "black", new Knight()),
       c: piece("B", "black", new Diagonal()),
       d: piece("Q", "black", new Combined(new Straight(), new Diagonal())),
       e: piece("K", "black", new Combined(new Straight(1), new Diagonal(1))),
       f: piece("B", "black", new Diagonal()),
-      g: piece("N", "black", new Forward(Direction.Down, { col: "g", row: 7 })),
+      g: piece("N", "black", new Knight()),
       h: piece("R", "black", new Straight()),
     },
   ];

@@ -3,6 +3,7 @@ import { createBoard, parseSquare, piece } from "@/utils";
 import Straight from "@/straight";
 import Combined from "@/combined";
 import Diagonal from "@/diagonal";
+import Knight from "@/knight";
 import Forward, { Direction } from "@/forward";
 
 describe("utils", () => {
@@ -22,12 +23,12 @@ describe("utils", () => {
     expect(createBoard()).toEqual([
       {
         a: piece("R", "white", new Straight()),
-        b: piece("N", "white", new Forward(Direction.Up, { col: "b", row: 0 })),
+        b: piece("N", "white", new Knight()),
         c: piece("B", "white", new Diagonal()),
         d: piece("Q", "white", new Combined(new Straight(), new Diagonal())),
         e: piece("K", "white", new Combined(new Straight(1), new Diagonal(1))),
         f: piece("B", "white", new Diagonal()),
-        g: piece("N", "white", new Forward(Direction.Up, { col: "g", row: 0 })),
+        g: piece("N", "white", new Knight()),
         h: piece("R", "white", new Straight()),
       },
       {
@@ -124,20 +125,12 @@ describe("utils", () => {
       },
       {
         a: piece("R", "black", new Straight()),
-        b: piece(
-          "N",
-          "black",
-          new Forward(Direction.Down, { col: "b", row: 7 })
-        ),
+        b: piece("N", "black", new Knight()),
         c: piece("B", "black", new Diagonal()),
         d: piece("Q", "black", new Combined(new Straight(), new Diagonal())),
         e: piece("K", "black", new Combined(new Straight(1), new Diagonal(1))),
         f: piece("B", "black", new Diagonal()),
-        g: piece(
-          "N",
-          "black",
-          new Forward(Direction.Down, { col: "g", row: 7 })
-        ),
+        g: piece("N", "black", new Knight()),
         h: piece("R", "black", new Straight()),
       },
     ]);
