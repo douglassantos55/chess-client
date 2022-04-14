@@ -33,6 +33,31 @@ export default class implements Movement {
       }
     }
 
+    return [...available, ...this.getCaptureSquares(from, board)];
+  }
+
+  getCaptureSquares(from: Square, board: Board): Square[] {
+    const available: Square[] = [];
+    const piece = board[from.row][from.col];
+
+    const colIdx = from.col.charCodeAt(0);
+    const leftColumn = String.fromCharCode(colIdx - 1);
+    const rightColumn = String.fromCharCode(colIdx + 1);
+
+    if (leftColumn >= "a") {
+      const left = board[from.row + this.direction][leftColumn];
+      if (left != null && left.color != piece?.color) {
+        available.push({ col: leftColumn, row: from.row + this.direction });
+      }
+    }
+
+    if (rightColumn <= "h") {
+      const right = board[from.row + this.direction][rightColumn];
+      if (right != null && right.color != piece?.color) {
+        available.push({ col: rightColumn, row: from.row + this.direction });
+      }
+    }
+
     return available;
   }
 }
