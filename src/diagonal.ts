@@ -7,6 +7,10 @@ export default class implements Movement {
     this.squares = squares;
   }
 
+  getCaptureSquares(from: Square, board: Board): Square[] {
+    return this.getAvailableMoves(from, board);
+  }
+
   getAvailableMoves(from: Square, board: Board): Square[] {
     return [
       ...this.getSquaresUp(from, board),

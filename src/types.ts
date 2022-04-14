@@ -1,9 +1,13 @@
-export type Color = "black" | "white";
+export enum Color {
+  Black = "black",
+  White = "white",
+}
 
 export type Piece = {
   color: Color;
   notation: string;
   movement: Movement;
+  position?: Square;
 };
 
 export interface Square {
@@ -19,4 +23,5 @@ export type Board = Row[];
 
 export interface Movement {
   getAvailableMoves(from: Square, board: Board): Square[];
+  getCaptureSquares(from: Square, board: Board): Square[];
 }

@@ -23,6 +23,7 @@ export default class implements Movement {
 
   getAvailableMoves(from: Square, board: Board): Square[] {
     const available: Square[] = [];
+    const piece = board[from.row][from.col];
     const multiplier = this.isOrigin(from) ? 2 : 1;
 
     for (let i = 1; i <= multiplier; i++) {
@@ -33,29 +34,30 @@ export default class implements Movement {
       }
     }
 
-    return [...available, ...this.getCaptureSquares(from, board)];
+    const captures = this.getCaptureSquares(from, board);
+    for (const square of captures) {
+      const target = board[square.row][square.col];
+      if (target != null && target.color != piece?.color) {
+        available.push(square);
+      }
+    }
+
+    return available;
   }
 
   getCaptureSquares(from: Square, board: Board): Square[] {
     const available: Square[] = [];
-    const piece = board[from.row][from.col];
 
     const colIdx = from.col.charCodeAt(0);
     const leftColumn = String.fromCharCode(colIdx - 1);
     const rightColumn = String.fromCharCode(colIdx + 1);
 
     if (leftColumn >= "a") {
-      const left = board[from.row + this.direction][leftColumn];
-      if (left != null && left.color != piece?.color) {
-        available.push({ col: leftColumn, row: from.row + this.direction });
-      }
+      available.push({ col: leftColumn, row: from.row + this.direction });
     }
 
     if (rightColumn <= "h") {
-      const right = board[from.row + this.direction][rightColumn];
-      if (right != null && right.color != piece?.color) {
-        available.push({ col: rightColumn, row: from.row + this.direction });
-      }
+      available.push({ col: rightColumn, row: from.row + this.direction });
     }
 
     return available;

@@ -1,6 +1,10 @@
 import type { Board, Movement, Square } from "./types";
 
 export default class implements Movement {
+  getCaptureSquares(from: Square, board: Board): Square[] {
+    return this.getAvailableMoves(from, board);
+  }
+
   getAvailableMoves(from: Square, board: Board): Square[] {
     const available = [];
     const piece = board[from.row][from.col];
