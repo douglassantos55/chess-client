@@ -72,10 +72,17 @@ describe("Board", () => {
 
   it("captures pieces", async () => {
     const board = mount(Board);
-    await board.get(".e2").trigger("click");
-    await board.get(".e7").trigger("click");
 
-    const piece = board.get(".e7").find(".piece");
+    await board.get(".e2").trigger("click");
+    await board.get(".e4").trigger("click");
+
+    await board.get(".d1").trigger("click");
+    await board.get(".f3").trigger("click");
+
+    await board.get(".f3").trigger("click");
+    await board.get(".f7").trigger("click");
+
+    const piece = board.get(".f7").find(".piece");
 
     expect(piece.exists()).toBe(true);
     expect(piece.classes()).toContain("white");
@@ -98,5 +105,34 @@ describe("Board", () => {
 
     await board.get(".a1").trigger("click");
     expect(board.findAll(".available")).toHaveLength(0);
+  });
+
+  it("moves only to allowed squares", async () => {
+    const board = mount(Board);
+
+    await board.get(".d1").trigger("click");
+    await board.get(".f3").trigger("click");
+
+    expect(board.get(".f3").find(".piece").exists()).to.be.false;
+
+    await board.get(".f1").trigger("click");
+    await board.get(".c4").trigger("click");
+
+    expect(board.get(".c4").find(".piece").exists()).to.be.false;
+
+    await board.get(".b1").trigger("click");
+    await board.get(".b3").trigger("click");
+
+    expect(board.get(".b3").find(".piece").exists()).to.be.false;
+
+    await board.get(".b8").trigger("click");
+    await board.get(".b6").trigger("click");
+
+    expect(board.get(".b6").find(".piece").exists()).to.be.false;
+
+    await board.get(".d8").trigger("click");
+    await board.get(".a5").trigger("click");
+
+    expect(board.get(".a5").find(".piece").exists()).to.be.false;
   });
 });

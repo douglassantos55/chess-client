@@ -41,9 +41,15 @@ function clearSelected() {
 }
 
 function Move(source: Square, dest: Square) {
-  const piece = board.value[source.row][source.col];
-  board.value[dest.row][dest.col] = piece;
-  board.value[source.row][source.col] = null;
+  const available = availableMoves.value.find(
+    (square: Square) => square.col == dest.col && square.row == dest.row
+  );
+
+  if (available) {
+    const piece = board.value[source.row][source.col];
+    board.value[dest.row][dest.col] = piece;
+    board.value[source.row][source.col] = null;
+  }
 }
 </script>
 
