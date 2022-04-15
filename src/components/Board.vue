@@ -3,6 +3,7 @@ import { ref } from "vue";
 import Square from "@/components/Square.vue";
 import { createBoard } from "@/utils";
 
+const inCheck = ref(false);
 const board = ref(createBoard());
 const selectedPiece = ref(null);
 const availableMoves = ref([]);
@@ -49,6 +50,33 @@ function Move(source: Square, dest: Square) {
     const piece = board.value[source.row][source.col];
     board.value[dest.row][dest.col] = piece;
     board.value[source.row][source.col] = null;
+
+    checkForCheck();
+  }
+}
+
+function checkForCheck() {
+  inCheck.value = false;
+
+  outer: for (const row in board.value) {
+    for (const col in board.value[row]) {
+      const target = board.value[parseInt(row)][col];
+      if (target != null) {
+        const captures = target.movement.getCaptureSquares(
+          { col, row: parseInt(row) },
+          board.value
+        );
+        const seesOpponentKing = captures.find((square: Square) => {
+          const piece = board.value[square.row][square.col];
+          return piece && piece.color != target.color && piece.notation == "K";
+        });
+
+        if (seesOpponentKing) {
+          inCheck.value = true;
+          break outer;
+        }
+      }
+    }
   }
 }
 </script>

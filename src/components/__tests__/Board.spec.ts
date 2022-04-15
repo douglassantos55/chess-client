@@ -135,4 +135,88 @@ describe("Board", () => {
 
     expect(board.get(".a5").find(".piece").exists()).to.be.false;
   });
+
+  it("checks for checks but there is none", async () => {
+    const board = mount(Board);
+
+    await board.get(".d2").trigger("click");
+    await board.get(".d4").trigger("click");
+
+    await board.get(".e7").trigger("click");
+    await board.get(".e5").trigger("click");
+
+    await board.get(".d4").trigger("click");
+    await board.get(".e5").trigger("click");
+
+    await board.get(".f8").trigger("click");
+    await board.get(".c5").trigger("click");
+
+    expect(board.vm.inCheck).toBe(false);
+  });
+
+  it("had check, but no more", async () => {
+    const board = mount(Board);
+
+    await board.get(".d2").trigger("click");
+    await board.get(".d4").trigger("click");
+
+    await board.get(".e7").trigger("click");
+    await board.get(".e5").trigger("click");
+
+    await board.get(".d4").trigger("click");
+    await board.get(".e5").trigger("click");
+
+    await board.get(".f8").trigger("click");
+    await board.get(".b4").trigger("click");
+
+    await board.get(".c2").trigger("click");
+    await board.get(".c3").trigger("click");
+
+    expect(board.vm.inCheck).toBe(false);
+  });
+
+  it("checks for checks", async () => {
+    const board = mount(Board);
+
+    await board.get(".d2").trigger("click");
+    await board.get(".d4").trigger("click");
+
+    await board.get(".e7").trigger("click");
+    await board.get(".e5").trigger("click");
+
+    await board.get(".d4").trigger("click");
+    await board.get(".e5").trigger("click");
+
+    await board.get(".f8").trigger("click");
+    await board.get(".b4").trigger("click");
+
+    expect(board.vm.inCheck).toBe(true);
+  });
+
+  it("checks for discover checks", async () => {
+    const board = mount(Board);
+
+    await board.get(".d2").trigger("click");
+    await board.get(".d4").trigger("click");
+
+    await board.get(".e7").trigger("click");
+    await board.get(".e5").trigger("click");
+
+    await board.get(".e5").trigger("click");
+    await board.get(".d4").trigger("click");
+
+    await board.get(".c2").trigger("click");
+    await board.get(".c3").trigger("click");
+
+    await board.get(".d4").trigger("click");
+    await board.get(".c3").trigger("click");
+
+    await board.get(".f8").trigger("click");
+    await board.get(".b4").trigger("click");
+
+    await board.get(".c3").trigger("click");
+    await board.get(".c2").trigger("click");
+
+    expect(board.vm.inCheck).toBe(true);
+  });
 });
