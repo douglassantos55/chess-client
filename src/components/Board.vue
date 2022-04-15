@@ -1,12 +1,19 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import Square from "@/components/Square.vue";
 import { createBoard } from "@/utils";
+import checkAudio from '../assets/move-check.webm'
 
 const inCheck = ref(false);
 const board = ref(createBoard());
 const selectedPiece = ref(null);
 const availableMoves = ref([]);
+
+watch(inCheck, inCheck => {
+    if (inCheck && typeof Audio != "undefined") {
+        new Audio(checkAudio).play()
+    }
+})
 
 function showAvailableMoves() {
   const selected = selectedPiece.value;
