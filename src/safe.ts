@@ -16,7 +16,11 @@ export default class implements Movement {
     const piece = board[from.row][from.col] as Piece;
     const enemies = this.findEnemies(piece.color, board);
 
-    return available.filter((square: Square) => {
+    // make it as if there was nothing where the king stands so that threats go
+    // through the squares behind the king
+    board[from.row][from.col] = null;
+
+    const moves = available.filter((square: Square) => {
       for (const enemy of enemies) {
         const moves = enemy.movement.getCaptureSquares(
           enemy.position as Square,
@@ -32,6 +36,11 @@ export default class implements Movement {
       }
       return true;
     });
+
+    // put the king back to its position
+    board[from.row][from.col] = piece;
+
+    return moves;
   }
 
   findEnemies(color: Color, board: Board): Piece[] {

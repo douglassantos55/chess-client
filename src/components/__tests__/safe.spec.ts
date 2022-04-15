@@ -100,4 +100,34 @@ describe("Safe", () => {
     expect(result).toContainEqual({ col: "e", row: 3 });
     expect(result).toContainEqual({ col: "f", row: 3 });
   });
+
+  it("cannot move to threatened squares behind itself", () => {
+    const safe = new Safe(new Combined(new Diagonal(1), new Straight(1)));
+    const board = createBoard();
+
+    board[3]["e"] = board[1]["e"];
+    board[1]["e"] = null;
+
+    board[4]["e"] = board[6]["e"];
+    board[6]["e"] = null;
+
+    board[2]["g"] = board[1]["g"];
+    board[1]["g"] = null;
+
+    board[2]["f"] = board[0]["e"];
+    board[0]["e"] = null;
+
+    board[4]["g"] = board[7]["e"];
+    board[7]["e"] = null;
+
+    board[2]["d"] = board[1]["d"];
+    board[1]["d"] = null;
+
+    const result = safe.getAvailableMoves({ col: "g", row: 4 }, board);
+
+    expect(result).toHaveLength(3);
+    expect(result).toContainEqual({ col: "h", row: 4 });
+    expect(result).toContainEqual({ col: "g", row: 5 });
+    expect(result).toContainEqual({ col: "f", row: 5 });
+  });
 });
