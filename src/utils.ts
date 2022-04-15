@@ -2,6 +2,7 @@ import Straight from "@/straight";
 import Diagonal from "@/diagonal";
 import Combined from "@/combined";
 import Knight from "@/knight";
+import Safe from "@/safe";
 import Forward, { Direction } from "@/forward";
 import type { Piece, Board, Square, Movement } from "@/types";
 import { Color } from "@/types";
@@ -36,7 +37,7 @@ export function createBoard(): Board {
       e: piece(
         "K",
         Color.White,
-        new Combined(new Straight(1), new Diagonal(1))
+        new Safe(new Combined(new Straight(1), new Diagonal(1)))
       ),
       f: piece("B", Color.White, new Diagonal()),
       g: piece("N", Color.White, new Knight()),
@@ -174,7 +175,7 @@ export function createBoard(): Board {
       e: piece(
         "K",
         Color.Black,
-        new Combined(new Straight(1), new Diagonal(1))
+        new Safe(new Combined(new Straight(1), new Diagonal(1)))
       ),
       f: piece("B", Color.Black, new Diagonal()),
       g: piece("N", Color.Black, new Knight()),
