@@ -29,8 +29,6 @@ function showAvailableMoves() {
 }
 
 function selectedSquare({ piece, square }) {
-  // if in check check if selected piece can block check
-  // otherwise ignore it
   if (inCheck.value && piece) {
     const moves = piece.movement.getAvailableMoves(square, board.value);
 
@@ -98,6 +96,7 @@ function checkForCheck() {
           for (const square of squares) {
             const piece = board.value[square.row][square.col];
             if (piece && piece.color != target.color && piece.notation == "K") {
+              threats.value.push([{ col, row: parseInt(row) }]);
               threats.value.push(squares);
             }
           }

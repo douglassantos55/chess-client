@@ -238,4 +238,69 @@ describe("Board", () => {
     await board.get(".e2").trigger("click");
     expect(board.vm.selectedPiece).toBe(null);
   });
+
+  it("can block check", async () => {
+    const board = mount(Board);
+
+    await board.get(".d2").trigger("click");
+    await board.get(".d4").trigger("click");
+
+    await board.get(".e7").trigger("click");
+    await board.get(".e5").trigger("click");
+
+    await board.get(".d4").trigger("click");
+    await board.get(".e5").trigger("click");
+
+    await board.get(".f8").trigger("click");
+    await board.get(".b4").trigger("click");
+
+    await board.get(".b1").trigger("click");
+    expect(board.vm.selectedPiece.piece).toContain({
+      notation: "N",
+      color: "white",
+    });
+
+    await board.get(".c1").trigger("click");
+    expect(board.vm.selectedPiece.piece).toContain({
+      notation: "B",
+      color: "white",
+    });
+
+    await board.get(".d1").trigger("click");
+    expect(board.vm.selectedPiece.piece).toContain({
+      notation: "Q",
+      color: "white",
+    });
+
+    await board.get(".c2").trigger("click");
+    expect(board.vm.selectedPiece.piece).toContain({
+      notation: "p",
+      color: "white",
+    });
+  });
+
+  it("can capture threatening piece", async () => {
+    const board = mount(Board);
+
+    await board.get(".d2").trigger("click");
+    await board.get(".d4").trigger("click");
+
+    await board.get(".e7").trigger("click");
+    await board.get(".e5").trigger("click");
+
+    await board.get(".d4").trigger("click");
+    await board.get(".e5").trigger("click");
+
+    await board.get(".f8").trigger("click");
+    await board.get(".b4").trigger("click");
+
+    await board.get(".c1").trigger("click");
+    await board.get(".d2").trigger("click");
+
+    await board.get(".b4").trigger("click");
+    await board.get(".d2").trigger("click");
+
+    await board.get(".b1").trigger("click");
+    expect(board.get(".d2").classes()).toContain("available");
+  });
 });
