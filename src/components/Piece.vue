@@ -1,29 +1,49 @@
 <script setup lang="ts">
+import { computed } from "vue";
 import type { Piece } from "@/types";
+import spritesheet from "@/assets/pieces.svg";
 
-defineProps<{
+const props = defineProps<{
   piece: Piece;
 }>();
+
+const clips = {
+  K: 0,
+  Q: 1,
+  B: 2,
+  N: 3,
+  R: 4,
+  p: 5.03,
+};
+
+const styles = computed(() => {
+  const idx = clips[props.piece.notation];
+  return {
+    "background-position-x": `-${70 * idx}px`,
+    "background-image": `url(${spritesheet})`,
+  };
+});
 </script>
 
 <template>
-  <span :class="`piece ${piece.color}`">
-    {{ piece.notation }}
-  </span>
+  <span :class="`piece ${piece.color}`" :style="styles">{{
+    piece.notation
+  }}</span>
 </template>
 
 <style scoped>
 .piece {
+  width: 74px;
+  height: 74px;
   z-index: 1;
   cursor: grab;
-  font-size: 35px;
-  font-weight: bold;
-  -webkit-text-stroke: 1px #666;
+  text-indent: -9999px;
+  background-size: 426px;
 }
 .piece.white {
-  -webkit-text-fill-color: #fff;
+  background-position-y: 0;
 }
 .piece.black {
-  -webkit-text-fill-color: #222;
+  background-position-y: -70px;
 }
 </style>
