@@ -23,16 +23,12 @@ function showAvailableMoves() {
     return;
   }
 
-  availableMoves.value = selected.piece.movement
+  let moves = selected.piece.movement
     .getAvailableMoves(selected.square, board.value)
     .flat();
-}
 
-function selectedSquare({ piece, square }) {
-  if (inCheck.value && piece) {
-    const moves = piece.movement.getAvailableMoves(square, board.value);
-
-    const canBlock = moves.flat().some((square: Square) => {
+  if (threats.value.length > 0) {
+    moves = moves.filter((square: Square) => {
       for (const threat of threats.value.flat()) {
         if (square.col === threat.col && square.row === threat.row) {
           return true;
@@ -40,12 +36,12 @@ function selectedSquare({ piece, square }) {
       }
       return false;
     });
-
-    if (!canBlock) {
-      return;
-    }
   }
 
+  availableMoves.value = moves;
+}
+
+function selectedSquare({ piece, square }) {
   if (selectedPiece.value && selectedPiece.value.piece) {
     if (!piece || piece.color != selectedPiece.value.piece.color) {
       Move(selectedPiece.value.square, square);

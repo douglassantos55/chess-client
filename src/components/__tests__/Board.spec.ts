@@ -236,7 +236,7 @@ describe("Board", () => {
     await board.get(".b4").trigger("click");
 
     await board.get(".e2").trigger("click");
-    expect(board.vm.selectedPiece).toBe(null);
+    expect(board.vm.availableMoves).toEqual([]);
   });
 
   it("can block check", async () => {
@@ -302,5 +302,27 @@ describe("Board", () => {
 
     await board.get(".b1").trigger("click");
     expect(board.get(".d2").classes()).toContain("available");
+  });
+
+  it("can only move to squares that can block check", async () => {
+    const board = mount(Board);
+
+    await board.get(".d2").trigger("click");
+    await board.get(".d4").trigger("click");
+
+    await board.get(".e7").trigger("click");
+    await board.get(".e5").trigger("click");
+
+    await board.get(".d4").trigger("click");
+    await board.get(".e5").trigger("click");
+
+    await board.get(".f8").trigger("click");
+    await board.get(".b4").trigger("click");
+
+    await board.get(".b1").trigger("click");
+
+    expect(board.get(".c3").classes()).toContain("available");
+    expect(board.get(".d2").classes()).toContain("available");
+    expect(board.get(".a3").classes()).not.toContain("available");
   });
 });
