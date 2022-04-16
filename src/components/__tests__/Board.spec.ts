@@ -325,4 +325,26 @@ describe("Board", () => {
     expect(board.get(".d2").classes()).toContain("available");
     expect(board.get(".a3").classes()).not.toContain("available");
   });
+
+  it("cannot move pinned pieces", async () => {
+    const board = mount(Board);
+
+    await board.get(".d2").trigger("click");
+    await board.get(".d4").trigger("click");
+
+    await board.get(".e7").trigger("click");
+    await board.get(".e5").trigger("click");
+
+    await board.get(".d4").trigger("click");
+    await board.get(".e5").trigger("click");
+
+    await board.get(".f8").trigger("click");
+    await board.get(".b4").trigger("click");
+
+    await board.get(".b1").trigger("click");
+    await board.get(".c3").trigger("click");
+
+    await board.get(".c3").trigger("click");
+    expect(board.vm.availableMoves).toEqual([]);
+  });
 });

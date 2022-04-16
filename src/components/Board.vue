@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import Square from "@/components/Square.vue";
 import { playSound, createBoard } from "@/utils";
 import moveAudio from "../assets/move.webm";
@@ -10,35 +10,33 @@ const inCheck = ref(false);
 const board = ref(createBoard());
 const selectedPiece = ref(null);
 const availableMoves = ref([]);
-const threats = ref([]);
-
-watch(inCheck, (inCheck) => {
-  inCheck && playSound(checkAudio);
-});
 
 function showAvailableMoves() {
-  const selected = selectedPiece.value;
+  const { piece, square } = selectedPiece.value;
 
-  if (!selected || !selected.piece) {
-    return;
-  }
+  if (piece && square) {
+    let moves = piece.movement.getAvailableMoves(square, board.value).flat();
 
-  let moves = selected.piece.movement
-    .getAvailableMoves(selected.square, board.value)
-    .flat();
+    // make it as if the piece was not there so that threats go through to the
+    // squares behind, preventing the piece from moving and exposing the king
+    // by filtering out the moves that are not within the threatened squares
+    board.value[square.row][square.col] = null;
+    const threatenedSquares = getThreats()[piece.color];
+    board.value[square.row][square.col] = piece;
 
-  if (threats.value.length > 0 && selected.piece.notation !== "K") {
-    moves = moves.filter((square: Square) => {
-      for (const threat of threats.value.flat()) {
-        if (square.col === threat.col && square.row === threat.row) {
-          return true;
+    if (threatenedSquares && piece.notation !== "K") {
+      moves = moves.filter((square: Square) => {
+        for (const threat of threatenedSquares.flat()) {
+          if (square.col === threat.col && square.row === threat.row) {
+            return true;
+          }
         }
-      }
-      return false;
-    });
-  }
+        return false;
+      });
+    }
 
-  availableMoves.value = moves;
+    availableMoves.value = moves;
+  }
 }
 
 function selectedSquare({ piece, square }) {
@@ -85,10 +83,8 @@ function Move(source: Square, dest: Square) {
   }
 }
 
-function checkForCheck() {
-  inCheck.value = false;
-  threats.value = [];
-
+function getThreats(): Square[][] {
+  const threats = {};
   for (const row in board.value) {
     for (const col in board.value[row]) {
       const target = board.value[parseInt(row)][col];
@@ -102,17 +98,28 @@ function checkForCheck() {
           for (const square of squares) {
             const piece = board.value[square.row][square.col];
             if (piece && piece.color != target.color && piece.notation == "K") {
-              threats.value.push([{ col, row: parseInt(row) }]);
-              threats.value.push(squares);
+              if (!threats[piece.color]) {
+                threats[piece.color] = [];
+              }
+              threats[piece.color].push([
+                { col, row: parseInt(row) },
+                ...squares,
+              ]);
             }
           }
         });
       }
     }
   }
+  return threats;
+}
 
-  if (threats.value.length !== 0) {
+function checkForCheck() {
+  inCheck.value = false;
+
+  if (Object.values(getThreats()).length !== 0) {
     inCheck.value = true;
+    playSound(checkAudio);
   }
 }
 </script>

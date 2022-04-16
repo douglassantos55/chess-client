@@ -30,7 +30,7 @@ export default class implements Movement {
     for (let i = 1; i <= multiplier; i++) {
       const dest = from.row + this.direction * i;
 
-      if (board[dest][from.col] == null) {
+      if (dest >= 0 && dest <= 7 && board[dest][from.col] == null) {
         moves.push({ col: from.col, row: dest });
       }
     }
@@ -54,11 +54,11 @@ export default class implements Movement {
     const leftColumn = String.fromCharCode(colIdx - 1);
     const rightColumn = String.fromCharCode(colIdx + 1);
 
-    if (leftColumn >= "a") {
+    if (from.row > 0 && from.row < 7 && leftColumn >= "a") {
       available.push([{ col: leftColumn, row: from.row + this.direction }]);
     }
 
-    if (rightColumn <= "h") {
+    if (from.row > 0 && from.row < 7 && rightColumn <= "h") {
       available.push([{ col: rightColumn, row: from.row + this.direction }]);
     }
 
