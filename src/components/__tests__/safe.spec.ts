@@ -139,4 +139,142 @@ describe("Safe", () => {
     expect(result).toContainEqual([{ col: "g", row: 5 }]);
     expect(result).toContainEqual([{ col: "f", row: 5 }]);
   });
+
+  it("cannot capture defended pieces diagonally", () => {
+    const safe = new Safe(new Combined(new Diagonal(1), new Straight(1)));
+    const board = createBoard();
+
+    board[4]["e"] = board[7]["e"];
+    board[7]["e"] = null;
+
+    board[3]["d"] = board[0]["a"];
+    board[0]["a"] = null;
+
+    board[2]["c"] = board[0]["c"];
+    board[0]["c"] = null;
+
+    const result = safe.getAvailableMoves({ row: 4, col: "e" }, board);
+
+    expect(result).toHaveLength(3);
+    expect(result.flat()).toHaveLength(3);
+
+    expect(result).toContainEqual([{ col: "f", row: 4 }]);
+    expect(result).toContainEqual([{ col: "f", row: 5 }]);
+    expect(result).toContainEqual([{ col: "e", row: 5 }]);
+  });
+
+  it("cannot capture defended pieces horizontally", () => {
+    const safe = new Safe(new Combined(new Diagonal(1), new Straight(1)));
+    const board = createBoard();
+
+    board[4]["e"] = board[7]["e"];
+    board[7]["e"] = null;
+
+    board[3]["d"] = board[0]["a"];
+    board[0]["a"] = null;
+
+    board[3]["h"] = board[0]["h"];
+    board[0]["h"] = null;
+
+    const result = safe.getAvailableMoves({ row: 4, col: "e" }, board);
+
+    expect(result).toHaveLength(3);
+    expect(result.flat()).toHaveLength(3);
+
+    expect(result).toContainEqual([{ col: "f", row: 4 }]);
+    expect(result).toContainEqual([{ col: "f", row: 5 }]);
+    expect(result).toContainEqual([{ col: "e", row: 5 }]);
+  });
+
+  it("cannot capture defended pieces vertically", () => {
+    const safe = new Safe(new Combined(new Diagonal(1), new Straight(1)));
+    const board = createBoard();
+
+    board[4]["e"] = board[7]["e"];
+    board[7]["e"] = null;
+
+    board[3]["d"] = board[0]["a"];
+    board[0]["a"] = null;
+
+    board[2]["d"] = board[0]["h"];
+    board[0]["h"] = null;
+
+    const result = safe.getAvailableMoves({ row: 4, col: "e" }, board);
+
+    expect(result).toHaveLength(3);
+    expect(result.flat()).toHaveLength(3);
+
+    expect(result).toContainEqual([{ col: "f", row: 4 }]);
+    expect(result).toContainEqual([{ col: "f", row: 5 }]);
+    expect(result).toContainEqual([{ col: "e", row: 5 }]);
+  });
+
+  it("cannot capture defended pieces by knight", () => {
+    const safe = new Safe(new Combined(new Diagonal(1), new Straight(1)));
+    const board = createBoard();
+
+    board[4]["e"] = board[7]["e"];
+    board[7]["e"] = null;
+
+    board[3]["d"] = board[0]["a"];
+    board[0]["a"] = null;
+
+    board[4]["b"] = board[0]["b"];
+    board[0]["b"] = null;
+
+    const result = safe.getAvailableMoves({ row: 4, col: "e" }, board);
+
+    expect(result).toHaveLength(3);
+    expect(result.flat()).toHaveLength(3);
+
+    expect(result).toContainEqual([{ col: "f", row: 4 }]);
+    expect(result).toContainEqual([{ col: "f", row: 5 }]);
+    expect(result).toContainEqual([{ col: "e", row: 5 }]);
+  });
+
+  it("cannot capture defended pieces by pawn", () => {
+    const safe = new Safe(new Combined(new Diagonal(1), new Straight(1)));
+    const board = createBoard();
+
+    board[4]["e"] = board[7]["e"];
+    board[7]["e"] = null;
+
+    board[3]["d"] = board[0]["a"];
+    board[0]["a"] = null;
+
+    board[2]["e"] = board[1]["e"];
+    board[1]["e"] = null;
+
+    const result = safe.getAvailableMoves({ row: 4, col: "e" }, board);
+
+    expect(result).toHaveLength(3);
+    expect(result.flat()).toHaveLength(3);
+
+    expect(result).toContainEqual([{ col: "f", row: 4 }]);
+    expect(result).toContainEqual([{ col: "f", row: 5 }]);
+    expect(result).toContainEqual([{ col: "e", row: 5 }]);
+  });
+
+  it("cannot capture defended pieces by pawn", () => {
+    const safe = new Safe(new Combined(new Diagonal(1), new Straight(1)));
+    const board = createBoard();
+
+    board[4]["e"] = board[7]["e"];
+    board[7]["e"] = null;
+
+    board[3]["d"] = board[0]["a"];
+    board[0]["a"] = null;
+
+    board[2]["c"] = board[1]["c"];
+    board[1]["c"] = null;
+
+    const result = safe.getAvailableMoves({ row: 4, col: "e" }, board);
+
+    expect(result).toHaveLength(3);
+    expect(result.flat()).toHaveLength(3);
+
+    expect(result).toContainEqual([{ col: "f", row: 4 }]);
+    expect(result).toContainEqual([{ col: "f", row: 5 }]);
+    expect(result).toContainEqual([{ col: "e", row: 5 }]);
+  });
 });

@@ -1,8 +1,10 @@
 import type { Board, Movement, Square } from "./types";
 
 export default class implements Movement {
+  private defended: Square[] = [];
+
   getCaptureSquares(from: Square, board: Board): Square[][] {
-    return this.getAvailableMoves(from, board);
+    return [[...this.defended], ...this.getAvailableMoves(from, board)];
   }
 
   getAvailableMoves(from: Square, board: Board): Square[][] {
@@ -21,6 +23,8 @@ export default class implements Movement {
         const l = board[i][left];
         if (l == null || l.color != piece?.color) {
           available.push([{ col: left, row: i }]);
+        } else if (l.color === piece?.color) {
+          this.defended.push({ col: left, row: i });
         }
       }
 
@@ -28,6 +32,8 @@ export default class implements Movement {
         const r = board[i][right];
         if (r == null || r.color != piece?.color) {
           available.push([{ col: right, row: i }]);
+        } else if (r.color === piece?.color) {
+          this.defended.push({ col: left, row: i });
         }
       }
     }
@@ -43,6 +49,8 @@ export default class implements Movement {
         const u = board[up][String.fromCharCode(i)];
         if (u == null || u.color != piece?.color) {
           available.push([{ col: String.fromCharCode(i), row: up }]);
+        } else if (u.color === piece?.color) {
+          this.defended.push({ col: String.fromCharCode(i), row: up });
         }
       }
 
@@ -50,6 +58,8 @@ export default class implements Movement {
         const d = board[down][String.fromCharCode(i)];
         if (d == null || d.color != piece?.color) {
           available.push([{ col: String.fromCharCode(i), row: down }]);
+        } else if (d.color === piece?.color) {
+          this.defended.push({ col: String.fromCharCode(i), row: down });
         }
       }
     }

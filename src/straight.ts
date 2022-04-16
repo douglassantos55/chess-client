@@ -1,14 +1,16 @@
 import type { Board, Movement, Square } from "./types";
 
 export default class implements Movement {
-  private squares: number | undefined = undefined;
+  private defended: Square[];
+  private squares: number | undefined;
 
   constructor(squares?: number) {
+    this.defended = [];
     this.squares = squares;
   }
 
   getCaptureSquares(from: Square, board: Board): Square[][] {
-    return this.getAvailableMoves(from, board);
+    return [[...this.defended], ...this.getAvailableMoves(from, board)];
   }
 
   getAvailableMoves(from: Square, board: Board): Square[][] {
@@ -36,6 +38,8 @@ export default class implements Movement {
       } else {
         if (p.color != piece?.color) {
           up.push({ col: from.col, row: i });
+        } else {
+          this.defended.push({ col: from.col, row: i });
         }
         break;
       }
@@ -51,6 +55,8 @@ export default class implements Movement {
       } else {
         if (p.color != piece?.color) {
           down.push({ col: from.col, row: i });
+        } else {
+          this.defended.push({ col: from.col, row: i });
         }
         break;
       }
@@ -78,6 +84,8 @@ export default class implements Movement {
       } else {
         if (p.color != piece?.color) {
           left.push({ col, row: from.row });
+        } else {
+          this.defended.push({ col, row: from.row });
         }
         break;
       }
@@ -96,6 +104,8 @@ export default class implements Movement {
       } else {
         if (p.color != piece?.color) {
           right.push({ col, row: from.row });
+        } else {
+          this.defended.push({ col, row: from.row });
         }
         break;
       }
