@@ -40,6 +40,7 @@ function select() {
 <template>
   <div
     class="square"
+    :data-square="col"
     :class="[notation, { available: isAvailable }]"
     @click.self="select"
   >
@@ -49,6 +50,8 @@ function select() {
 
 <style scoped>
 .square {
+  width: 82px;
+  height: 82px;
   display: flex;
   position: relative;
   align-items: center;

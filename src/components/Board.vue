@@ -109,7 +109,7 @@ function checkForCheck() {
 
 <template>
   <div class="board" @contextmenu.prevent="clearSelected">
-    <div class="row" v-for="(row, idx) in board" :key="idx">
+    <div class="row" v-for="(row, idx) in board" :key="idx" :data-row="idx + 1">
       <Square
         v-for="(piece, col) in row"
         :key="`${col}${idx}`"
@@ -124,16 +124,35 @@ function checkForCheck() {
 </template>
 
 <style scoped>
+.board {
+  display: flex;
+  flex-direction: column-reverse;
+}
 .row {
   display: flex;
   background: #eee;
+  position: relative;
 }
-.square {
-  width: 82px;
-  height: 82px;
+.row:first-of-type .square:after {
+  bottom: 5px;
+  right: 5px;
+  z-index: 1;
+  color: #444;
+  display: block;
+  position: absolute;
+  content: attr(data-square);
 }
-.row:nth-child(odd) .square:nth-child(even),
-.row:nth-child(even) .square:nth-child(odd) {
+.row:before {
+  top: 5px;
+  left: 5px;
+  z-index: 1;
+  color: #444;
+  display: block;
+  position: absolute;
+  content: attr(data-row);
+}
+.row:nth-child(odd) .square:nth-child(odd),
+.row:nth-child(even) .square:nth-child(even) {
   background: #76adb7;
 }
 </style>
