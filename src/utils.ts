@@ -183,3 +183,9 @@ export function createBoard(): Board {
     },
   ];
 }
+
+export function playSound(sound: string) {
+  if (typeof Audio != "undefined") {
+    new Audio(sound).play();
+  }
+}

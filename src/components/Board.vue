@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import Square from "@/components/Square.vue";
-import { createBoard } from "@/utils";
+import { playSound, createBoard } from "@/utils";
+import moveAudio from "../assets/move.webm";
+import captureAudio from "../assets/capture.webm";
 import checkAudio from "../assets/move-check.webm";
 
 const inCheck = ref(false);
@@ -11,9 +13,7 @@ const availableMoves = ref([]);
 const threats = ref([]);
 
 watch(inCheck, (inCheck) => {
-  if (inCheck && typeof Audio != "undefined") {
-    new Audio(checkAudio).play();
-  }
+  inCheck && playSound(checkAudio);
 });
 
 function showAvailableMoves() {
@@ -27,7 +27,7 @@ function showAvailableMoves() {
     .getAvailableMoves(selected.square, board.value)
     .flat();
 
-  if (threats.value.length > 0) {
+  if (threats.value.length > 0 && selected.piece.notation !== "K") {
     moves = moves.filter((square: Square) => {
       for (const threat of threats.value.flat()) {
         if (square.col === threat.col && square.row === threat.row) {
@@ -68,10 +68,20 @@ function Move(source: Square, dest: Square) {
 
   if (available) {
     const piece = board.value[source.row][source.col];
+    const captured = board.value[dest.row][dest.col];
+
     board.value[dest.row][dest.col] = piece;
     board.value[source.row][source.col] = null;
 
     checkForCheck();
+
+    if (!inCheck.value) {
+      if (captured) {
+        playSound(captureAudio);
+      } else {
+        playSound(moveAudio);
+      }
+    }
   }
 }
 
