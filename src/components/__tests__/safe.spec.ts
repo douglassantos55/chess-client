@@ -16,12 +16,14 @@ describe("Safe", () => {
 
     let result = safe.getAvailableMoves({ col: "e", row: 0 }, board);
     expect(result).toHaveLength(1);
+    expect(result.flat()).toHaveLength(1);
 
     board[4]["e"] = board[6]["e"];
     board[6]["e"] = null;
 
     result = safe.getAvailableMoves({ col: "e", row: 0 }, board);
     expect(result).toHaveLength(1);
+    expect(result.flat()).toHaveLength(1);
   });
 
   it("removes available moves which are threated by enemy pieces", () => {
@@ -36,8 +38,8 @@ describe("Safe", () => {
 
     const result = safe.getAvailableMoves({ col: "e", row: 2 }, board);
 
-    expect(result).toContainEqual({ col: "f", row: 3 });
-    expect(result).toContainEqual({ col: "d", row: 2 });
+    expect(result).toContainEqual([{ col: "f", row: 3 }]);
+    expect(result).toContainEqual([{ col: "d", row: 2 }]);
   });
 
   it("removes available moves which are threated by enemy pieces", () => {
@@ -57,6 +59,7 @@ describe("Safe", () => {
 
     const result = safe.getAvailableMoves({ col: "e", row: 2 }, board);
     expect(result).toHaveLength(0);
+    expect(result.flat()).toHaveLength(0);
   });
 
   it("ignores same color pieces", () => {
@@ -77,11 +80,13 @@ describe("Safe", () => {
     const result = safe.getAvailableMoves({ col: "e", row: 2 }, board);
 
     expect(result).toHaveLength(5);
-    expect(result).toContainEqual({ col: "d", row: 2 });
-    expect(result).toContainEqual({ col: "f", row: 2 });
-    expect(result).toContainEqual({ col: "d", row: 3 });
-    expect(result).toContainEqual({ col: "e", row: 3 });
-    expect(result).toContainEqual({ col: "f", row: 3 });
+    expect(result.flat()).toHaveLength(5);
+
+    expect(result).toContainEqual([{ col: "d", row: 2 }]);
+    expect(result).toContainEqual([{ col: "f", row: 2 }]);
+    expect(result).toContainEqual([{ col: "d", row: 3 }]);
+    expect(result).toContainEqual([{ col: "e", row: 3 }]);
+    expect(result).toContainEqual([{ col: "f", row: 3 }]);
   });
 
   it("considers pawns", () => {
@@ -94,11 +99,13 @@ describe("Safe", () => {
     const result = safe.getAvailableMoves({ col: "e", row: 4 }, board);
 
     expect(result).toHaveLength(5);
-    expect(result).toContainEqual({ col: "d", row: 4 });
-    expect(result).toContainEqual({ col: "f", row: 4 });
-    expect(result).toContainEqual({ col: "d", row: 3 });
-    expect(result).toContainEqual({ col: "e", row: 3 });
-    expect(result).toContainEqual({ col: "f", row: 3 });
+    expect(result.flat()).toHaveLength(5);
+
+    expect(result).toContainEqual([{ col: "d", row: 4 }]);
+    expect(result).toContainEqual([{ col: "f", row: 4 }]);
+    expect(result).toContainEqual([{ col: "d", row: 3 }]);
+    expect(result).toContainEqual([{ col: "e", row: 3 }]);
+    expect(result).toContainEqual([{ col: "f", row: 3 }]);
   });
 
   it("cannot move to threatened squares behind itself", () => {
@@ -126,8 +133,10 @@ describe("Safe", () => {
     const result = safe.getAvailableMoves({ col: "g", row: 4 }, board);
 
     expect(result).toHaveLength(3);
-    expect(result).toContainEqual({ col: "h", row: 4 });
-    expect(result).toContainEqual({ col: "g", row: 5 });
-    expect(result).toContainEqual({ col: "f", row: 5 });
+    expect(result.flat()).toHaveLength(3);
+
+    expect(result).toContainEqual([{ col: "h", row: 4 }]);
+    expect(result).toContainEqual([{ col: "g", row: 5 }]);
+    expect(result).toContainEqual([{ col: "f", row: 5 }]);
   });
 });

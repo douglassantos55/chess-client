@@ -7,19 +7,22 @@ export default class implements Movement {
     this.squares = squares;
   }
 
-  getCaptureSquares(from: Square, board: Board): Square[] {
+  getCaptureSquares(from: Square, board: Board): Square[][] {
     return this.getAvailableMoves(from, board);
   }
 
-  getAvailableMoves(from: Square, board: Board): Square[] {
+  getAvailableMoves(from: Square, board: Board): Square[][] {
     return [
-      ...this.getSquaresUp(from, board),
-      ...this.getSquaresDown(from, board),
+      ...this.getSquaresUp(from, board).filter((squares) => squares.length > 0),
+      ...this.getSquaresDown(from, board).filter(
+        (squares) => squares.length > 0
+      ),
     ];
   }
 
-  getSquaresUp(from: Square, board: Board): Square[] {
-    const available = [];
+  getSquaresUp(from: Square, board: Board): Square[][] {
+    const squaresLeft = [];
+    const squaresRight = [];
     const piece = board[from.row][from.col];
 
     let doneLeft = false;
@@ -37,10 +40,10 @@ export default class implements Movement {
           const pl = board[i][left];
 
           if (pl == null) {
-            available.push({ col: left, row: i });
+            squaresLeft.push({ col: left, row: i });
           } else {
             if (pl.color != piece?.color) {
-              available.push({ col: left, row: i });
+              squaresLeft.push({ col: left, row: i });
             }
             doneLeft = true;
           }
@@ -56,10 +59,10 @@ export default class implements Movement {
           const pr = board[i][right];
 
           if (pr == null) {
-            available.push({ col: right, row: i });
+            squaresRight.push({ col: right, row: i });
           } else {
             if (pr.color != piece?.color) {
-              available.push({ col: right, row: i });
+              squaresRight.push({ col: right, row: i });
             }
             doneRight = true;
           }
@@ -67,11 +70,12 @@ export default class implements Movement {
       }
     }
 
-    return available;
+    return [squaresLeft, squaresRight];
   }
 
-  getSquaresDown(from: Square, board: Board): Square[] {
-    const available = [];
+  getSquaresDown(from: Square, board: Board): Square[][] {
+    const squaresLeft = [];
+    const squaresRight = [];
     const piece = board[from.row][from.col];
 
     let doneLeft = false;
@@ -89,10 +93,10 @@ export default class implements Movement {
           const pl = board[i][left];
 
           if (pl == null) {
-            available.push({ col: left, row: i });
+            squaresLeft.push({ col: left, row: i });
           } else {
             if (pl.color != piece?.color) {
-              available.push({ col: left, row: i });
+              squaresLeft.push({ col: left, row: i });
             }
             doneLeft = true;
           }
@@ -108,10 +112,10 @@ export default class implements Movement {
           const pr = board[i][right];
 
           if (pr == null) {
-            available.push({ col: right, row: i });
+            squaresRight.push({ col: right, row: i });
           } else {
             if (pr.color != piece?.color) {
-              available.push({ col: right, row: i });
+              squaresRight.push({ col: right, row: i });
             }
             doneRight = true;
           }
@@ -119,6 +123,6 @@ export default class implements Movement {
       }
     }
 
-    return available;
+    return [squaresLeft, squaresRight];
   }
 }

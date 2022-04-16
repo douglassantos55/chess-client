@@ -11,7 +11,7 @@ describe("Forward", () => {
       createBoard()
     );
 
-    expect(result).toEqual([
+    expect(result).toContainEqual([
       { col: "e", row: 2 },
       { col: "e", row: 3 },
     ]);
@@ -24,7 +24,7 @@ describe("Forward", () => {
       createBoard()
     );
 
-    expect(result).toEqual([
+    expect(result).toContainEqual([
       { col: "e", row: 5 },
       { col: "e", row: 4 },
     ]);
@@ -37,7 +37,7 @@ describe("Forward", () => {
       createBoard()
     );
 
-    expect(result).toEqual([{ col: "e", row: 4 }]);
+    expect(result).toContainEqual([{ col: "e", row: 4 }]);
   });
 
   it("captures diagonally right", () => {
@@ -53,10 +53,14 @@ describe("Forward", () => {
 
     const result = forward.getAvailableMoves({ col: "a", row: 1 }, board);
 
-    expect(result).toHaveLength(3);
-    expect(result).toContainEqual({ col: "a", row: 2 });
-    expect(result).toContainEqual({ col: "a", row: 3 });
-    expect(result).toContainEqual({ col: "b", row: 2 });
+    expect(result).toHaveLength(2);
+    expect(result.flat()).toHaveLength(3);
+
+    expect(result).toContainEqual([
+      { col: "a", row: 2 },
+      { col: "a", row: 3 },
+    ]);
+    expect(result).toContainEqual([{ col: "b", row: 2 }]);
   });
 
   it("captures diagonally left", () => {
@@ -72,10 +76,14 @@ describe("Forward", () => {
 
     const result = forward.getAvailableMoves({ col: "h", row: 1 }, board);
 
-    expect(result).toHaveLength(3);
-    expect(result).toContainEqual({ col: "h", row: 2 });
-    expect(result).toContainEqual({ col: "h", row: 3 });
-    expect(result).toContainEqual({ col: "g", row: 2 });
+    expect(result).toHaveLength(2);
+    expect(result.flat()).toHaveLength(3);
+
+    expect(result).toContainEqual([{ col: "g", row: 2 }]);
+    expect(result).toContainEqual([
+      { col: "h", row: 2 },
+      { col: "h", row: 3 },
+    ]);
   });
 
   it("captures diagonally on both sides", () => {
@@ -99,9 +107,11 @@ describe("Forward", () => {
     const result = forward.getAvailableMoves({ col: "b", row: 3 }, board);
 
     expect(result).toHaveLength(3);
-    expect(result).toContainEqual({ col: "b", row: 4 });
-    expect(result).toContainEqual({ col: "a", row: 4 });
-    expect(result).toContainEqual({ col: "c", row: 4 });
+    expect(result.flat()).toHaveLength(3);
+
+    expect(result).toContainEqual([{ col: "b", row: 4 }]);
+    expect(result).toContainEqual([{ col: "a", row: 4 }]);
+    expect(result).toContainEqual([{ col: "c", row: 4 }]);
   });
 
   it("captures diagonally on both sides", () => {
@@ -128,8 +138,10 @@ describe("Forward", () => {
     const result = forward.getAvailableMoves({ col: "e", row: 4 }, board);
 
     expect(result).toHaveLength(3);
-    expect(result).toContainEqual({ col: "e", row: 3 });
-    expect(result).toContainEqual({ col: "f", row: 3 });
-    expect(result).toContainEqual({ col: "d", row: 3 });
+    expect(result.flat()).toHaveLength(3);
+
+    expect(result).toContainEqual([{ col: "e", row: 3 }]);
+    expect(result).toContainEqual([{ col: "f", row: 3 }]);
+    expect(result).toContainEqual([{ col: "d", row: 3 }]);
   });
 });

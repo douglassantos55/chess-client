@@ -7,11 +7,11 @@ export default class implements Movement {
     this.movement = movement;
   }
 
-  getCaptureSquares(from: Square, board: Board): Square[] {
+  getCaptureSquares(from: Square, board: Board): Square[][] {
     return this.movement.getCaptureSquares(from, board);
   }
 
-  getAvailableMoves(from: Square, board: Board): Square[] {
+  getAvailableMoves(from: Square, board: Board): Square[][] {
     const available = this.movement.getAvailableMoves(from, board);
     const piece = board[from.row][from.col] as Piece;
     const enemies = this.findEnemies(piece.color, board);
@@ -20,18 +20,21 @@ export default class implements Movement {
     // through the squares behind the king
     board[from.row][from.col] = null;
 
-    const moves = available.filter((square: Square) => {
-      for (const enemy of enemies) {
-        const moves = enemy.movement.getCaptureSquares(
-          enemy.position as Square,
-          board
-        );
-        const isThreatened = moves.find((sqr: Square) => {
-          return sqr.col == square.col && sqr.row == square.row;
-        });
+    const moves = available.filter((squares: Square[]) => {
+      for (const square of squares) {
+        for (const enemy of enemies) {
+          const moves = enemy.movement.getCaptureSquares(
+            enemy.position as Square,
+            board
+          );
 
-        if (isThreatened) {
-          return false;
+          const isThreatened = moves.flat().find((sqr: Square) => {
+            return sqr.col == square.col && sqr.row == square.row;
+          });
+
+          if (isThreatened) {
+            return false;
+          }
         }
       }
       return true;

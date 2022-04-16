@@ -8,6 +8,7 @@ const inCheck = ref(false);
 const board = ref(createBoard());
 const selectedPiece = ref(null);
 const availableMoves = ref([]);
+const threats = ref([]);
 
 watch(inCheck, (inCheck) => {
   if (inCheck && typeof Audio != "undefined") {
@@ -22,13 +23,31 @@ function showAvailableMoves() {
     return;
   }
 
-  availableMoves.value = selected.piece.movement.getAvailableMoves(
-    selected.square,
-    board.value
-  );
+  availableMoves.value = selected.piece.movement
+    .getAvailableMoves(selected.square, board.value)
+    .flat();
 }
 
 function selectedSquare({ piece, square }) {
+  // if in check check if selected piece can block check
+  // otherwise ignore it
+  if (inCheck.value && piece) {
+    const moves = piece.movement.getAvailableMoves(square, board.value);
+
+    const canBlock = moves.flat().some((square: Square) => {
+      for (const threat of threats.value.flat()) {
+        if (square.col === threat.col && square.row === threat.row) {
+          return true;
+        }
+      }
+      return false;
+    });
+
+    if (!canBlock) {
+      return;
+    }
+  }
+
   if (selectedPiece.value && selectedPiece.value.piece) {
     if (!piece || piece.color != selectedPiece.value.piece.color) {
       Move(selectedPiece.value.square, square);
@@ -64,8 +83,9 @@ function Move(source: Square, dest: Square) {
 
 function checkForCheck() {
   inCheck.value = false;
+  threats.value = [];
 
-  outer: for (const row in board.value) {
+  for (const row in board.value) {
     for (const col in board.value[row]) {
       const target = board.value[parseInt(row)][col];
       if (target != null) {
@@ -73,17 +93,21 @@ function checkForCheck() {
           { col, row: parseInt(row) },
           board.value
         );
-        const seesOpponentKing = captures.find((square: Square) => {
-          const piece = board.value[square.row][square.col];
-          return piece && piece.color != target.color && piece.notation == "K";
-        });
 
-        if (seesOpponentKing) {
-          inCheck.value = true;
-          break outer;
-        }
+        captures.forEach((squares: Square[]) => {
+          for (const square of squares) {
+            const piece = board.value[square.row][square.col];
+            if (piece && piece.color != target.color && piece.notation == "K") {
+              threats.value.push(squares);
+            }
+          }
+        });
       }
     }
+  }
+
+  if (threats.value.length !== 0) {
+    inCheck.value = true;
   }
 }
 </script>

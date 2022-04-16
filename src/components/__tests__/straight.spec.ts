@@ -12,19 +12,29 @@ describe("Straight", () => {
     board[3]["d"] = piece("R", Color.White, straight);
     const result = straight.getAvailableMoves({ col: "d", row: 3 }, board);
 
-    expect(result).toHaveLength(11);
+    expect(result).toHaveLength(4);
+    expect(result.flat()).toHaveLength(11);
 
-    expect(result).toContainEqual({ col: "d", row: 2 });
-    expect(result).toContainEqual({ col: "d", row: 4 });
-    expect(result).toContainEqual({ col: "d", row: 5 });
-    expect(result).toContainEqual({ col: "d", row: 6 });
-    expect(result).toContainEqual({ col: "a", row: 3 });
-    expect(result).toContainEqual({ col: "b", row: 3 });
-    expect(result).toContainEqual({ col: "c", row: 3 });
-    expect(result).toContainEqual({ col: "e", row: 3 });
-    expect(result).toContainEqual({ col: "f", row: 3 });
-    expect(result).toContainEqual({ col: "g", row: 3 });
-    expect(result).toContainEqual({ col: "h", row: 3 });
+    expect(result).toContainEqual([{ col: "d", row: 2 }]);
+
+    expect(result).toContainEqual([
+      { col: "d", row: 4 },
+      { col: "d", row: 5 },
+      { col: "d", row: 6 },
+    ]);
+
+    expect(result).toContainEqual([
+      { col: "c", row: 3 },
+      { col: "b", row: 3 },
+      { col: "a", row: 3 },
+    ]);
+
+    expect(result).toContainEqual([
+      { col: "e", row: 3 },
+      { col: "f", row: 3 },
+      { col: "g", row: 3 },
+      { col: "h", row: 3 },
+    ]);
   });
 
   it("avaible moves at left corner of the board", () => {
@@ -35,19 +45,25 @@ describe("Straight", () => {
     board[2]["a"] = piece("R", Color.White, straight);
     const result = straight.getAvailableMoves({ col: "a", row: 2 }, board);
 
-    expect(result).toHaveLength(11);
+    expect(result).toHaveLength(2);
+    expect(result.flat()).toHaveLength(11);
 
-    expect(result).toContainEqual({ col: "a", row: 3 });
-    expect(result).toContainEqual({ col: "a", row: 4 });
-    expect(result).toContainEqual({ col: "a", row: 5 });
-    expect(result).toContainEqual({ col: "a", row: 6 });
-    expect(result).toContainEqual({ col: "b", row: 2 });
-    expect(result).toContainEqual({ col: "c", row: 2 });
-    expect(result).toContainEqual({ col: "d", row: 2 });
-    expect(result).toContainEqual({ col: "e", row: 2 });
-    expect(result).toContainEqual({ col: "f", row: 2 });
-    expect(result).toContainEqual({ col: "g", row: 2 });
-    expect(result).toContainEqual({ col: "h", row: 2 });
+    expect(result).toContainEqual([
+      { col: "a", row: 3 },
+      { col: "a", row: 4 },
+      { col: "a", row: 5 },
+      { col: "a", row: 6 },
+    ]);
+
+    expect(result).toContainEqual([
+      { col: "b", row: 2 },
+      { col: "c", row: 2 },
+      { col: "d", row: 2 },
+      { col: "e", row: 2 },
+      { col: "f", row: 2 },
+      { col: "g", row: 2 },
+      { col: "h", row: 2 },
+    ]);
   });
 
   it("avaible moves at right corner of the board", () => {
@@ -58,19 +74,25 @@ describe("Straight", () => {
     board[2]["h"] = piece("R", Color.White, straight);
     const result = straight.getAvailableMoves({ col: "h", row: 2 }, board);
 
-    expect(result).toHaveLength(11);
+    expect(result).toHaveLength(2);
+    expect(result.flat()).toHaveLength(11);
 
-    expect(result).toContainEqual({ col: "h", row: 3 });
-    expect(result).toContainEqual({ col: "h", row: 4 });
-    expect(result).toContainEqual({ col: "h", row: 5 });
-    expect(result).toContainEqual({ col: "h", row: 6 });
-    expect(result).toContainEqual({ col: "b", row: 2 });
-    expect(result).toContainEqual({ col: "c", row: 2 });
-    expect(result).toContainEqual({ col: "d", row: 2 });
-    expect(result).toContainEqual({ col: "e", row: 2 });
-    expect(result).toContainEqual({ col: "f", row: 2 });
-    expect(result).toContainEqual({ col: "g", row: 2 });
-    expect(result).toContainEqual({ col: "a", row: 2 });
+    expect(result).toContainEqual([
+      { col: "h", row: 3 },
+      { col: "h", row: 4 },
+      { col: "h", row: 5 },
+      { col: "h", row: 6 },
+    ]);
+
+    expect(result).toContainEqual([
+      { col: "g", row: 2 },
+      { col: "f", row: 2 },
+      { col: "e", row: 2 },
+      { col: "d", row: 2 },
+      { col: "c", row: 2 },
+      { col: "b", row: 2 },
+      { col: "a", row: 2 },
+    ]);
   });
 
   it("blocks at same color piece", () => {
@@ -81,6 +103,7 @@ describe("Straight", () => {
     );
 
     expect(result).toHaveLength(0);
+    expect(result.flat()).toHaveLength(0);
   });
 
   it("blocks at opposite color piece", () => {
@@ -90,7 +113,18 @@ describe("Straight", () => {
     board[1]["a"] = null;
 
     const result = straight.getAvailableMoves({ col: "a", row: 0 }, board);
-    expect(result).toHaveLength(6); // from a2 to a7
+
+    expect(result).toHaveLength(1);
+    expect(result.flat()).toHaveLength(6); // from a2 to a7
+
+    expect(result).toContainEqual([
+      { col: "a", row: 1 },
+      { col: "a", row: 2 },
+      { col: "a", row: 3 },
+      { col: "a", row: 4 },
+      { col: "a", row: 5 },
+      { col: "a", row: 6 },
+    ]);
   });
 
   it("moves only allowed number of squares", () => {
@@ -102,10 +136,12 @@ describe("Straight", () => {
     const result = straight.getAvailableMoves({ col: "e", row: 3 }, board);
 
     expect(result).toHaveLength(4);
-    expect(result).toContainEqual({ col: "e", row: 4 });
-    expect(result).toContainEqual({ col: "e", row: 2 });
-    expect(result).toContainEqual({ col: "d", row: 3 });
-    expect(result).toContainEqual({ col: "f", row: 3 });
+    expect(result.flat()).toHaveLength(4);
+
+    expect(result).toContainEqual([{ col: "e", row: 4 }]);
+    expect(result).toContainEqual([{ col: "e", row: 2 }]);
+    expect(result).toContainEqual([{ col: "d", row: 3 }]);
+    expect(result).toContainEqual([{ col: "f", row: 3 }]);
   });
 
   it("moves only allowed number of squares", () => {
@@ -117,9 +153,11 @@ describe("Straight", () => {
     const result = straight.getAvailableMoves({ col: "e", row: 2 }, board);
 
     expect(result).toHaveLength(3);
-    expect(result).toContainEqual({ col: "e", row: 3 });
-    expect(result).toContainEqual({ col: "d", row: 2 });
-    expect(result).toContainEqual({ col: "f", row: 2 });
+    expect(result.flat()).toHaveLength(3);
+
+    expect(result).toContainEqual([{ col: "e", row: 3 }]);
+    expect(result).toContainEqual([{ col: "d", row: 2 }]);
+    expect(result).toContainEqual([{ col: "f", row: 2 }]);
   });
 
   it("limited squares starting at 0", () => {
@@ -130,6 +168,7 @@ describe("Straight", () => {
     );
 
     expect(result).toHaveLength(0);
+    expect(result.flat()).toHaveLength(0);
   });
 
   it("limited squares starting at 0", () => {
@@ -141,6 +180,7 @@ describe("Straight", () => {
     );
 
     expect(result).toHaveLength(0);
+    expect(result.flat()).toHaveLength(0);
   });
 
   it("limited squares starting at 'a'", () => {
@@ -152,6 +192,7 @@ describe("Straight", () => {
     );
 
     expect(result).toHaveLength(0);
+    expect(result.flat()).toHaveLength(0);
   });
 
   it("limited squares starting at 'h'", () => {
@@ -163,6 +204,7 @@ describe("Straight", () => {
     );
 
     expect(result).toHaveLength(0);
+    expect(result.flat()).toHaveLength(0);
   });
 
   it("moves only two squares", () => {
@@ -172,10 +214,17 @@ describe("Straight", () => {
     board[2]["h"] = piece("random", Color.White, straight);
     const result = straight.getAvailableMoves({ col: "h", row: 2 }, board);
 
-    expect(result).toHaveLength(4);
-    expect(result).toContainEqual({ col: "h", row: 3 });
-    expect(result).toContainEqual({ col: "h", row: 4 });
-    expect(result).toContainEqual({ col: "g", row: 2 });
-    expect(result).toContainEqual({ col: "f", row: 2 });
+    expect(result).toHaveLength(2);
+    expect(result.flat()).toHaveLength(4);
+
+    expect(result).toContainEqual([
+      { col: "h", row: 3 },
+      { col: "h", row: 4 },
+    ]);
+
+    expect(result).toContainEqual([
+      { col: "g", row: 2 },
+      { col: "f", row: 2 },
+    ]);
   });
 });

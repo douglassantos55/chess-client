@@ -1,11 +1,11 @@
 import type { Board, Movement, Square } from "./types";
 
 export default class implements Movement {
-  getCaptureSquares(from: Square, board: Board): Square[] {
+  getCaptureSquares(from: Square, board: Board): Square[][] {
     return this.getAvailableMoves(from, board);
   }
 
-  getAvailableMoves(from: Square, board: Board): Square[] {
+  getAvailableMoves(from: Square, board: Board): Square[][] {
     const available = [];
     const piece = board[from.row][from.col];
     const colIdx = from.col.charCodeAt(0);
@@ -20,14 +20,14 @@ export default class implements Movement {
       if (left >= "a") {
         const l = board[i][left];
         if (l == null || l.color != piece?.color) {
-          available.push({ col: left, row: i });
+          available.push([{ col: left, row: i }]);
         }
       }
 
       if (right <= "h") {
         const r = board[i][right];
         if (r == null || r.color != piece?.color) {
-          available.push({ col: right, row: i });
+          available.push([{ col: right, row: i }]);
         }
       }
     }
@@ -42,14 +42,14 @@ export default class implements Movement {
       if (up < 8) {
         const u = board[up][String.fromCharCode(i)];
         if (u == null || u.color != piece?.color) {
-          available.push({ col: String.fromCharCode(i), row: up });
+          available.push([{ col: String.fromCharCode(i), row: up }]);
         }
       }
 
       if (down >= 0) {
         const d = board[down][String.fromCharCode(i)];
         if (d == null || d.color != piece?.color) {
-          available.push({ col: String.fromCharCode(i), row: down });
+          available.push([{ col: String.fromCharCode(i), row: down }]);
         }
       }
     }

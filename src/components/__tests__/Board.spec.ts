@@ -219,4 +219,23 @@ describe("Board", () => {
 
     expect(board.vm.inCheck).toBe(true);
   });
+
+  it("cannot move pieces if in check", async () => {
+    const board = mount(Board);
+
+    await board.get(".d2").trigger("click");
+    await board.get(".d4").trigger("click");
+
+    await board.get(".e7").trigger("click");
+    await board.get(".e5").trigger("click");
+
+    await board.get(".d4").trigger("click");
+    await board.get(".e5").trigger("click");
+
+    await board.get(".f8").trigger("click");
+    await board.get(".b4").trigger("click");
+
+    await board.get(".e2").trigger("click");
+    expect(board.vm.selectedPiece).toBe(null);
+  });
 });

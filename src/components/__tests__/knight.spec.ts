@@ -12,8 +12,10 @@ describe("L", () => {
     );
 
     expect(result).toHaveLength(2);
-    expect(result).toContainEqual({ col: "a", row: 2 });
-    expect(result).toContainEqual({ col: "c", row: 2 });
+    expect(result.flat()).toHaveLength(2);
+
+    expect(result).toContainEqual([{ col: "a", row: 2 }]);
+    expect(result).toContainEqual([{ col: "c", row: 2 }]);
   });
 
   it("moves up", () => {
@@ -24,8 +26,10 @@ describe("L", () => {
     );
 
     expect(result).toHaveLength(2);
-    expect(result).toContainEqual({ col: "f", row: 2 });
-    expect(result).toContainEqual({ col: "h", row: 2 });
+    expect(result.flat()).toHaveLength(2);
+
+    expect(result).toContainEqual([{ col: "f", row: 2 }]);
+    expect(result).toContainEqual([{ col: "h", row: 2 }]);
   });
 
   it("moves down", () => {
@@ -36,8 +40,10 @@ describe("L", () => {
     );
 
     expect(result).toHaveLength(2);
-    expect(result).toContainEqual({ col: "a", row: 5 });
-    expect(result).toContainEqual({ col: "c", row: 5 });
+    expect(result.flat()).toHaveLength(2);
+
+    expect(result).toContainEqual([{ col: "a", row: 5 }]);
+    expect(result).toContainEqual([{ col: "c", row: 5 }]);
   });
 
   it("moves down", () => {
@@ -48,8 +54,10 @@ describe("L", () => {
     );
 
     expect(result).toHaveLength(2);
-    expect(result).toContainEqual({ col: "h", row: 5 });
-    expect(result).toContainEqual({ col: "f", row: 5 });
+    expect(result.flat()).toHaveLength(2);
+
+    expect(result).toContainEqual([{ col: "h", row: 5 }]);
+    expect(result).toContainEqual([{ col: "f", row: 5 }]);
   });
 
   it("moves all around", () => {
@@ -60,14 +68,16 @@ describe("L", () => {
     const result = movement.getAvailableMoves({ col: "e", row: 4 }, board);
 
     expect(result).toHaveLength(8);
-    expect(result).toContainEqual({ col: "d", row: 6 });
-    expect(result).toContainEqual({ col: "f", row: 6 });
-    expect(result).toContainEqual({ col: "c", row: 5 });
-    expect(result).toContainEqual({ col: "c", row: 3 });
-    expect(result).toContainEqual({ col: "g", row: 5 });
-    expect(result).toContainEqual({ col: "g", row: 3 });
-    expect(result).toContainEqual({ col: "d", row: 2 });
-    expect(result).toContainEqual({ col: "f", row: 2 });
+    expect(result.flat()).toHaveLength(8);
+
+    expect(result).toContainEqual([{ col: "d", row: 6 }]);
+    expect(result).toContainEqual([{ col: "f", row: 6 }]);
+    expect(result).toContainEqual([{ col: "c", row: 5 }]);
+    expect(result).toContainEqual([{ col: "c", row: 3 }]);
+    expect(result).toContainEqual([{ col: "g", row: 5 }]);
+    expect(result).toContainEqual([{ col: "g", row: 3 }]);
+    expect(result).toContainEqual([{ col: "d", row: 2 }]);
+    expect(result).toContainEqual([{ col: "f", row: 2 }]);
   });
 
   it("moves from the left corner", () => {
@@ -78,10 +88,12 @@ describe("L", () => {
     const result = movement.getAvailableMoves({ col: "a", row: 4 }, board);
 
     expect(result).toHaveLength(4);
-    expect(result).toContainEqual({ col: "b", row: 6 });
-    expect(result).toContainEqual({ col: "b", row: 2 });
-    expect(result).toContainEqual({ col: "c", row: 5 });
-    expect(result).toContainEqual({ col: "c", row: 3 });
+    expect(result.flat()).toHaveLength(4);
+
+    expect(result).toContainEqual([{ col: "b", row: 6 }]);
+    expect(result).toContainEqual([{ col: "b", row: 2 }]);
+    expect(result).toContainEqual([{ col: "c", row: 5 }]);
+    expect(result).toContainEqual([{ col: "c", row: 3 }]);
   });
 
   it("moves from the right corner", () => {
@@ -92,10 +104,12 @@ describe("L", () => {
     const result = movement.getAvailableMoves({ col: "h", row: 4 }, board);
 
     expect(result).toHaveLength(4);
-    expect(result).toContainEqual({ col: "g", row: 6 });
-    expect(result).toContainEqual({ col: "g", row: 2 });
-    expect(result).toContainEqual({ col: "f", row: 5 });
-    expect(result).toContainEqual({ col: "f", row: 3 });
+    expect(result.flat()).toHaveLength(4);
+
+    expect(result).toContainEqual([{ col: "g", row: 6 }]);
+    expect(result).toContainEqual([{ col: "g", row: 2 }]);
+    expect(result).toContainEqual([{ col: "f", row: 5 }]);
+    expect(result).toContainEqual([{ col: "f", row: 3 }]);
   });
 
   it("does not move weird", () => {
@@ -106,7 +120,9 @@ describe("L", () => {
     );
 
     expect(result).toHaveLength(2);
-    expect(result).toContainEqual({ col: "a", row: 2 });
-    expect(result).toContainEqual({ col: "c", row: 2 });
+    expect(result.flat()).toHaveLength(2);
+
+    expect(result).toContainEqual([{ col: "a", row: 2 }]);
+    expect(result).toContainEqual([{ col: "c", row: 2 }]);
   });
 });

@@ -7,8 +7,8 @@ export default class implements Movement {
     this.movements = movements;
   }
 
-  getCaptureSquares(from: Square, board: Board): Square[] {
-    let available: Square[] = [];
+  getCaptureSquares(from: Square, board: Board): Square[][] {
+    let available: Square[][] = [];
 
     this.movements.forEach((movement: Movement) => {
       available = available.concat(movement.getCaptureSquares(from, board));
@@ -17,8 +17,8 @@ export default class implements Movement {
     return available;
   }
 
-  getAvailableMoves(from: Square, board: Board): Square[] {
-    let available: Square[] = [];
+  getAvailableMoves(from: Square, board: Board): Square[][] {
+    let available: Square[][] = [];
 
     this.movements.forEach((movement: Movement) => {
       available = available.concat(movement.getAvailableMoves(from, board));

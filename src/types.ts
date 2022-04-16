@@ -22,6 +22,6 @@ export type Row = {
 export type Board = Row[];
 
 export interface Movement {
-  getAvailableMoves(from: Square, board: Board): Square[];
-  getCaptureSquares(from: Square, board: Board): Square[];
+  getAvailableMoves(from: Square, board: Board): Square[][];
+  getCaptureSquares(from: Square, board: Board): Square[][];
 }

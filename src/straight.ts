@@ -7,21 +7,24 @@ export default class implements Movement {
     this.squares = squares;
   }
 
-  getCaptureSquares(from: Square, board: Board): Square[] {
+  getCaptureSquares(from: Square, board: Board): Square[][] {
     return this.getAvailableMoves(from, board);
   }
 
-  getAvailableMoves(from: Square, board: Board): Square[] {
-    const available: Square[] = [];
-
-    return available.concat(
-      this.getVerticalMoves(from, board),
-      this.getHorizontalMoves(from, board)
-    );
+  getAvailableMoves(from: Square, board: Board): Square[][] {
+    return [
+      ...this.getVerticalMoves(from, board).filter(
+        (squares) => squares.length > 0
+      ),
+      ...this.getHorizontalMoves(from, board).filter(
+        (squares) => squares.length > 0
+      ),
+    ];
   }
 
-  getVerticalMoves(from: Square, board: Board) {
-    const available = [];
+  getVerticalMoves(from: Square, board: Board): Square[][] {
+    const up = [];
+    const down = [];
     const piece = board[from.row][from.col];
     const upLimit = Math.max(0, this.squares ? from.row - this.squares : 0);
 
@@ -29,10 +32,10 @@ export default class implements Movement {
     for (let i = from.row - 1; i >= upLimit; i--) {
       const p = board[i][from.col];
       if (p == null) {
-        available.push({ col: from.col, row: i });
+        up.push({ col: from.col, row: i });
       } else {
         if (p.color != piece?.color) {
-          available.push({ col: from.col, row: i });
+          up.push({ col: from.col, row: i });
         }
         break;
       }
@@ -44,20 +47,21 @@ export default class implements Movement {
     for (let i = from.row + 1; i <= downLimit; i++) {
       const p = board[i][from.col];
       if (p == null) {
-        available.push({ col: from.col, row: i });
+        down.push({ col: from.col, row: i });
       } else {
         if (p.color != piece?.color) {
-          available.push({ col: from.col, row: i });
+          down.push({ col: from.col, row: i });
         }
         break;
       }
     }
 
-    return available;
+    return [up, down];
   }
 
-  getHorizontalMoves(from: Square, board: Board): Square[] {
-    const available = [];
+  getHorizontalMoves(from: Square, board: Board): Square[][] {
+    const left = [];
+    const right = [];
     const piece = board[from.row][from.col];
     const source = from.col.charCodeAt(0);
 
@@ -70,10 +74,10 @@ export default class implements Movement {
       const p = board[from.row][col];
 
       if (p == null) {
-        available.push({ col, row: from.row });
+        left.push({ col, row: from.row });
       } else {
         if (p.color != piece?.color) {
-          available.push({ col, row: from.row });
+          left.push({ col, row: from.row });
         }
         break;
       }
@@ -88,15 +92,15 @@ export default class implements Movement {
       const p = board[from.row][col];
 
       if (p == null) {
-        available.push({ col, row: from.row });
+        right.push({ col, row: from.row });
       } else {
         if (p.color != piece?.color) {
-          available.push({ col, row: from.row });
+          right.push({ col, row: from.row });
         }
         break;
       }
     }
 
-    return available;
+    return [left, right];
   }
 }
