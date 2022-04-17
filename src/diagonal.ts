@@ -10,10 +10,12 @@ export default class implements Movement {
   }
 
   getCaptureSquares(from: Square, board: Board): Square[][] {
-    return [[...this.defended], ...this.getAvailableMoves(from, board)];
+    return [...this.getAvailableMoves(from, board), [...this.defended]];
   }
 
   getAvailableMoves(from: Square, board: Board): Square[][] {
+    this.defended = [];
+
     return [
       ...this.getSquaresUp(from, board).filter((squares) => squares.length > 0),
       ...this.getSquaresDown(from, board).filter(

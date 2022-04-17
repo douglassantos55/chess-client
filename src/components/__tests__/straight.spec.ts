@@ -227,4 +227,25 @@ describe("Straight", () => {
       { col: "f", row: 2 },
     ]);
   });
+
+  it("resets defended", () => {
+    const straight = new Straight();
+    const board = createBoard();
+    let result = straight.getCaptureSquares({ row: 0, col: "a" }, board);
+
+    expect(result.flat()).toHaveLength(2);
+    expect(result.flat()).toContainEqual({ row: 1, col: "a" });
+    expect(result.flat()).toContainEqual({ row: 0, col: "b" });
+
+    board[3]["a"] = board[1]["a"];
+    board[1]["a"] = null;
+
+    result = straight.getCaptureSquares({ row: 0, col: "a" }, board);
+
+    expect(result.flat()).toHaveLength(4);
+    expect(result.flat()).toContainEqual({ row: 3, col: "a" });
+    expect(result.flat()).toContainEqual({ row: 2, col: "a" });
+    expect(result.flat()).toContainEqual({ row: 1, col: "a" });
+    expect(result.flat()).toContainEqual({ row: 0, col: "b" });
+  });
 });

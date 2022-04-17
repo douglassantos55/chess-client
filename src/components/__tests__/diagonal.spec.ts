@@ -304,4 +304,31 @@ describe("Diagonal", () => {
       { col: "f", row: 4 },
     ]);
   });
+
+  it("resets defended", () => {
+    const diagonal = new Diagonal();
+    const board = createBoard();
+    let result = diagonal.getCaptureSquares({ col: "c", row: 0 }, board);
+
+    expect(result.flat()).toHaveLength(2);
+    expect(result.flat()).toContainEqual({ col: "b", row: 1 });
+    expect(result.flat()).toContainEqual({ col: "d", row: 1 });
+
+    board[3]["d"] = board[1]["d"];
+    board[1]["d"] = null;
+
+    board[2]["e"] = board[1]["e"];
+    board[1]["e"] = null;
+
+    board[2]["b"] = board[1]["b"];
+    board[1]["b"] = null;
+
+    result = diagonal.getCaptureSquares({ col: "c", row: 0 }, board);
+
+    expect(result.flat()).toHaveLength(4);
+    expect(result.flat()).toContainEqual({ col: "b", row: 1 });
+    expect(result.flat()).toContainEqual({ col: "a", row: 2 });
+    expect(result.flat()).toContainEqual({ col: "d", row: 1 });
+    expect(result.flat()).toContainEqual({ col: "e", row: 2 });
+  });
 });

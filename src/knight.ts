@@ -4,10 +4,12 @@ export default class implements Movement {
   private defended: Square[] = [];
 
   getCaptureSquares(from: Square, board: Board): Square[][] {
-    return [[...this.defended], ...this.getAvailableMoves(from, board)];
+    return [...this.getAvailableMoves(from, board), [...this.defended]];
   }
 
   getAvailableMoves(from: Square, board: Board): Square[][] {
+    this.defended = [];
+
     const available = [];
     const piece = board[from.row][from.col];
     const colIdx = from.col.charCodeAt(0);
@@ -33,7 +35,7 @@ export default class implements Movement {
         if (r == null || r.color != piece?.color) {
           available.push([{ col: right, row: i }]);
         } else if (r.color === piece?.color) {
-          this.defended.push({ col: left, row: i });
+          this.defended.push({ col: right, row: i });
         }
       }
     }

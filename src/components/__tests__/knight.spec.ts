@@ -125,4 +125,31 @@ describe("L", () => {
     expect(result).toContainEqual([{ col: "a", row: 2 }]);
     expect(result).toContainEqual([{ col: "c", row: 2 }]);
   });
+
+  it("resets defended", () => {
+    const movement = new L();
+    const board = createBoard();
+
+    let result = movement.getCaptureSquares({ col: "b", row: 0 }, board);
+
+    expect(result.flat()).toHaveLength(3);
+    expect(result.flat()).toContainEqual({ col: "a", row: 2 });
+    expect(result.flat()).toContainEqual({ col: "c", row: 2 });
+    expect(result.flat()).toContainEqual({ col: "d", row: 1 });
+
+    board[2]["c"] = board[0]["b"];
+    board[0]["b"] = null;
+
+    result = movement.getCaptureSquares({ col: "c", row: 2 }, board);
+
+    expect(result.flat()).toHaveLength(8);
+    expect(result.flat()).toContainEqual({ col: "a", row: 1 });
+    expect(result.flat()).toContainEqual({ col: "a", row: 3 });
+    expect(result.flat()).toContainEqual({ col: "b", row: 0 });
+    expect(result.flat()).toContainEqual({ col: "b", row: 4 });
+    expect(result.flat()).toContainEqual({ col: "d", row: 0 });
+    expect(result.flat()).toContainEqual({ col: "d", row: 4 });
+    expect(result.flat()).toContainEqual({ col: "e", row: 3 });
+    expect(result.flat()).toContainEqual({ col: "e", row: 1 });
+  });
 });

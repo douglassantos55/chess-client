@@ -1,7 +1,7 @@
 import type { Board, Movement, Square } from "./types";
 
 export default class implements Movement {
-  private defended: Square[];
+  public defended: Square[];
   private squares: number | undefined;
 
   constructor(squares?: number) {
@@ -10,10 +10,12 @@ export default class implements Movement {
   }
 
   getCaptureSquares(from: Square, board: Board): Square[][] {
-    return [[...this.defended], ...this.getAvailableMoves(from, board)];
+    return [...this.getAvailableMoves(from, board), [...this.defended]];
   }
 
   getAvailableMoves(from: Square, board: Board): Square[][] {
+    this.defended = [];
+
     return [
       ...this.getVerticalMoves(from, board).filter(
         (squares) => squares.length > 0
