@@ -8,18 +8,18 @@ const props = defineProps<{
 }>();
 
 const clips = {
-  K: 0,
-  Q: 1,
+  K: 0.05,
+  Q: 1.03,
   B: 2,
   N: 3,
-  R: 4,
-  p: 5.03,
+  R: 3.96,
+  p: 4.94,
 };
 
 const styles = computed(() => {
   const idx = clips[props.piece.notation];
   return {
-    "background-position-x": `-${70 * idx}px`,
+    "background-position-x": `-${85 * idx}px`,
     "background-image": `url(${spritesheet})`,
   };
 });
@@ -38,12 +38,12 @@ const styles = computed(() => {
   z-index: 1;
   cursor: grab;
   text-indent: -9999px;
-  background-size: 426px;
+  background-size: 500px;
 }
 .piece.white {
-  background-position-y: 0;
+  background-position-y: -5px;
 }
 .piece.black {
-  background-position-y: -70px;
+  background-position-y: -90px;
 }
 </style>
