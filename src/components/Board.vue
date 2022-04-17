@@ -71,6 +71,7 @@ function Move(source: Square, dest: Square) {
     board.value[dest.row][dest.col] = piece;
     board.value[source.row][source.col] = null;
 
+    piece.moveCount++;
     checkForCheck();
 
     if (!inCheck.value) {

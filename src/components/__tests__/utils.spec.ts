@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { createBoard, parseSquare, piece } from "@/utils";
 import Straight from "@/straight";
 import Combined from "@/combined";
+import Castle from "@/castle";
 import Diagonal from "@/diagonal";
 import Knight from "@/knight";
 import Safe from "@/safe";
@@ -35,7 +36,13 @@ describe("utils", () => {
         e: piece(
           "K",
           Color.White,
-          new Safe(new Combined(new Straight(1), new Diagonal(1)))
+          new Safe(
+            new Combined(
+              new Straight(1),
+              new Diagonal(1),
+              new Castle({ col: "e", row: 0 })
+            )
+          )
         ),
         f: piece("B", Color.White, new Diagonal()),
         g: piece("N", Color.White, new Knight()),
@@ -177,7 +184,13 @@ describe("utils", () => {
         e: piece(
           "K",
           Color.Black,
-          new Safe(new Combined(new Straight(1), new Diagonal(1)))
+          new Safe(
+            new Combined(
+              new Straight(1),
+              new Diagonal(1),
+              new Castle({ col: "e", row: 7 })
+            )
+          )
         ),
         f: piece("B", Color.Black, new Diagonal()),
         g: piece("N", Color.Black, new Knight()),

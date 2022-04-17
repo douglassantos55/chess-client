@@ -7,6 +7,7 @@ export type Piece = {
   color: Color;
   notation: string;
   movement: Movement;
+  moveCount: number;
   position?: Square;
 };
 

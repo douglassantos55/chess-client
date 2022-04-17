@@ -61,6 +61,15 @@ describe("Board", () => {
     );
   });
 
+  it("increments moved piece's move count", async () => {
+    const board = mount(Board);
+
+    await board.get(".piece.black").trigger("click");
+    await board.get(".square.a5").trigger("click");
+
+    expect(board.vm.board[4]["a"].moveCount).toBe(1);
+  });
+
   it("clears selected piece after moving", async () => {
     const board = mount(Board);
 

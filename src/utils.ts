@@ -1,6 +1,7 @@
 import Straight from "@/straight";
 import Diagonal from "@/diagonal";
 import Combined from "@/combined";
+import Castle from "@/castle";
 import Knight from "@/knight";
 import Safe from "@/safe";
 import Forward, { Direction } from "@/forward";
@@ -12,7 +13,7 @@ export function piece(
   color: Color,
   movement: Movement
 ): Piece {
-  return { color, notation, movement };
+  return { color, notation, movement, moveCount: 0 };
 }
 
 export function parseSquare(square: string): Square | null {
@@ -37,7 +38,13 @@ export function createBoard(): Board {
       e: piece(
         "K",
         Color.White,
-        new Safe(new Combined(new Straight(1), new Diagonal(1)))
+        new Safe(
+          new Combined(
+            new Straight(1),
+            new Diagonal(1),
+            new Castle({ col: "e", row: 0 })
+          )
+        )
       ),
       f: piece("B", Color.White, new Diagonal()),
       g: piece("N", Color.White, new Knight()),
@@ -175,7 +182,13 @@ export function createBoard(): Board {
       e: piece(
         "K",
         Color.Black,
-        new Safe(new Combined(new Straight(1), new Diagonal(1)))
+        new Safe(
+          new Combined(
+            new Straight(1),
+            new Diagonal(1),
+            new Castle({ col: "e", row: 7 })
+          )
+        )
       ),
       f: piece("B", Color.Black, new Diagonal()),
       g: piece("N", Color.Black, new Knight()),

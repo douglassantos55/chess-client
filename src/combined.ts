@@ -11,7 +11,11 @@ export default class implements Movement {
     let available: Square[][] = [];
 
     this.movements.forEach((movement: Movement) => {
-      available = available.concat(movement.getCaptureSquares(from, board));
+      available = available.concat(
+        movement
+          .getCaptureSquares(from, board)
+          .filter((squares) => squares.length > 0)
+      );
     });
 
     return available;
@@ -21,7 +25,11 @@ export default class implements Movement {
     let available: Square[][] = [];
 
     this.movements.forEach((movement: Movement) => {
-      available = available.concat(movement.getAvailableMoves(from, board));
+      available = available.concat(
+        movement
+          .getAvailableMoves(from, board)
+          .filter((squares) => squares.length > 0)
+      );
     });
 
     return available;
