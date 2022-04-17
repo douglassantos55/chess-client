@@ -7,32 +7,24 @@ export enum Direction {
 
 export default class implements Movement {
   private direction: Direction;
-  private initialSquare: Square;
 
-  constructor(distance: Direction, initialSquare: Square) {
+  constructor(distance: Direction) {
     this.direction = distance;
-    this.initialSquare = initialSquare;
-  }
-
-  isOrigin(from: Square): boolean {
-    const sameColumn = from.col == this.initialSquare.col;
-    const sameRow = from.row == this.initialSquare.row;
-
-    return sameColumn && sameRow;
   }
 
   getAvailableMoves(from: Square, board: Board): Square[][] {
     const available: Square[][] = [];
     const piece = board[from.row][from.col];
-    const multiplier = this.isOrigin(from) ? 2 : 1;
+    const multiplier = piece?.moveCount === 0 ? 2 : 1;
 
     const moves = [];
     for (let i = 1; i <= multiplier; i++) {
       const dest = from.row + this.direction * i;
 
-      if (dest >= 0 && dest <= 7 && board[dest][from.col] == null) {
-        moves.push({ col: from.col, row: dest });
+      if (dest < 0 || dest >= 8 || board[dest][from.col] != null) {
+        break;
       }
+      moves.push({ col: from.col, row: dest });
     }
     available.push(moves);
 
