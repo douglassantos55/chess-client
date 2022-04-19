@@ -356,4 +356,16 @@ describe("Board", () => {
     await board.get(".c3").trigger("click");
     expect(board.vm.availableMoves).toEqual([]);
   });
+
+  it("displays the right perspective", () => {
+    const white = mount(Board, {
+      props: { perspective: "white" },
+    });
+    expect(white.classes()).toContain("white");
+
+    const black = mount(Board, {
+      props: { perspective: "black" },
+    });
+    expect(black.classes()).toContain("black");
+  });
 });

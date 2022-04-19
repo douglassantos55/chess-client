@@ -7,6 +7,10 @@ import moveAudio from "../assets/move.webm";
 import captureAudio from "../assets/capture.webm";
 import checkAudio from "../assets/move-check.webm";
 
+const { perspective = Color.White } = defineProps<{
+  perspective?: Color;
+}>();
+
 const inCheck = ref(false);
 const board = ref(createBoard());
 const selectedPiece = ref(null);
@@ -99,7 +103,7 @@ function checkForCheck(color: Color) {
 </script>
 
 <template>
-  <div class="board" @contextmenu.prevent="clearSelected">
+  <div :class="['board', perspective]" @contextmenu.prevent="clearSelected">
     <div
       class="row"
       v-for="(row, idx) in board.squares()"
@@ -124,6 +128,12 @@ function checkForCheck(color: Color) {
   display: flex;
   flex-direction: column-reverse;
 }
+.board.black {
+  flex-direction: column;
+}
+.board.black .row {
+  flex-direction: row-reverse;
+}
 .row {
   display: flex;
   background: #eee;
@@ -135,6 +145,7 @@ function checkForCheck(color: Color) {
   z-index: 1;
   color: #444;
   display: block;
+  font-weight: bold;
   position: absolute;
   content: attr(data-square);
 }
@@ -144,6 +155,7 @@ function checkForCheck(color: Color) {
   z-index: 1;
   color: #444;
   display: block;
+  font-weight: bold;
   position: absolute;
   content: attr(data-row);
 }

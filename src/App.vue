@@ -3,7 +3,7 @@ import Board from "./components/Board.vue";
 </script>
 
 <template>
-  <Board />
+  <Board perspective="black" />
 </template>
 
 <style>
