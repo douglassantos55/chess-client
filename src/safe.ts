@@ -1,4 +1,5 @@
-import type { Movement, Board, Square, Row, Piece, Color } from "@/types";
+import type { Movement, Square } from "@/types";
+import type Board from "./Board";
 
 export default class implements Movement {
   private movement: Movement;
@@ -12,52 +13,18 @@ export default class implements Movement {
   }
 
   getAvailableMoves(from: Square, board: Board): Square[][] {
-    const available = this.movement.getAvailableMoves(from, board);
-    const piece = board[from.row][from.col] as Piece;
-    const enemies = this.findEnemies(piece.color, board);
+    let available = this.movement.getAvailableMoves(from, board);
+    const piece = board.piece(from);
 
-    // make it as if there was nothing where the king stands so that threats go
-    // through the squares behind the king
-    board[from.row][from.col] = null;
-
-    const moves = available.filter((squares: Square[]) => {
-      for (const square of squares) {
-        for (const enemy of enemies) {
-          const moves = enemy.movement.getCaptureSquares(
-            enemy.position as Square,
-            board
-          );
-
-          const isThreatened = moves.flat().find((sqr: Square) => {
-            return sqr.col == square.col && sqr.row == square.row;
-          });
-
-          if (isThreatened) {
-            return false;
-          }
+    if (piece) {
+      available = available.filter((squares: Square[]) => {
+        for (const square of squares) {
+          const threats = board.getThreatsAgainst(square, piece.color, [from]);
+          return threats.length === 0;
         }
-      }
-      return true;
-    });
+      });
+    }
 
-    // put the king back to its position
-    board[from.row][from.col] = piece;
-
-    return moves;
-  }
-
-  findEnemies(color: Color, board: Board): Piece[] {
-    const enemies: Piece[] = [];
-
-    board.forEach((row: Row, i: number) => {
-      for (const col in row) {
-        const target = row[col];
-        if (target && target.color != color) {
-          enemies.push({ ...target, position: { col, row: i } });
-        }
-      }
-    });
-
-    return enemies;
+    return available;
   }
 }

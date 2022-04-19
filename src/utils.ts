@@ -5,8 +5,9 @@ import Castle from "@/castle";
 import Knight from "@/knight";
 import Safe from "@/safe";
 import Forward, { Direction } from "@/forward";
-import type { Piece, Board, Square, Movement } from "@/types";
+import type { Piece, Square, Movement } from "@/types";
 import { Color } from "@/types";
+import Board from "./Board";
 
 export function piece(
   notation: string,
@@ -16,20 +17,33 @@ export function piece(
   return { color, notation, movement, moveCount: 0 };
 }
 
-export function parseSquare(square: string): Square | null {
-  const [col, row] = square.split("");
-  const invalidCol = col > "h" || col < "a";
-  const invalidRow = parseInt(row) < 1 || parseInt(row) > 8;
+export function validateSquare(square: Square): boolean {
+  const { col, row } = square;
+  const validRow = row >= 0 && row < 8;
+  const validColumn = col >= "a" && col <= "h";
 
-  if (invalidCol || invalidRow) {
+  return validRow && validColumn;
+}
+
+export function parseSquare(square: Square): string {
+  if (!validateSquare(square)) {
+    return "";
+  }
+  return `${square.col}${square.row + 1}`;
+}
+
+export function parseNotation(notation: string): Square | null {
+  const [col, row] = notation.split("");
+  const square = { col, row: parseInt(row) - 1 };
+
+  if (!validateSquare(square)) {
     return null;
   }
-
-  return { col, row: parseInt(row) - 1 };
+  return square;
 }
 
 export function createBoard(): Board {
-  return [
+  return new Board([
     {
       a: piece("R", Color.White, new Straight()),
       b: piece("N", Color.White, new Knight()),
@@ -51,46 +65,14 @@ export function createBoard(): Board {
       h: piece("R", Color.White, new Straight()),
     },
     {
-      a: piece(
-        "p",
-        Color.White,
-        new Forward(Direction.Up, { col: "a", row: 1 })
-      ),
-      b: piece(
-        "p",
-        Color.White,
-        new Forward(Direction.Up, { col: "b", row: 1 })
-      ),
-      c: piece(
-        "p",
-        Color.White,
-        new Forward(Direction.Up, { col: "c", row: 1 })
-      ),
-      d: piece(
-        "p",
-        Color.White,
-        new Forward(Direction.Up, { col: "d", row: 1 })
-      ),
-      e: piece(
-        "p",
-        Color.White,
-        new Forward(Direction.Up, { col: "e", row: 1 })
-      ),
-      f: piece(
-        "p",
-        Color.White,
-        new Forward(Direction.Up, { col: "f", row: 1 })
-      ),
-      g: piece(
-        "p",
-        Color.White,
-        new Forward(Direction.Up, { col: "g", row: 1 })
-      ),
-      h: piece(
-        "p",
-        Color.White,
-        new Forward(Direction.Up, { col: "h", row: 1 })
-      ),
+      a: piece("p", Color.White, new Forward(Direction.Up)),
+      b: piece("p", Color.White, new Forward(Direction.Up)),
+      c: piece("p", Color.White, new Forward(Direction.Up)),
+      d: piece("p", Color.White, new Forward(Direction.Up)),
+      e: piece("p", Color.White, new Forward(Direction.Up)),
+      f: piece("p", Color.White, new Forward(Direction.Up)),
+      g: piece("p", Color.White, new Forward(Direction.Up)),
+      h: piece("p", Color.White, new Forward(Direction.Up)),
     },
     {
       a: null,
@@ -133,46 +115,14 @@ export function createBoard(): Board {
       h: null,
     },
     {
-      a: piece(
-        "p",
-        Color.Black,
-        new Forward(Direction.Down, { col: "a", row: 6 })
-      ),
-      b: piece(
-        "p",
-        Color.Black,
-        new Forward(Direction.Down, { col: "b", row: 6 })
-      ),
-      c: piece(
-        "p",
-        Color.Black,
-        new Forward(Direction.Down, { col: "c", row: 6 })
-      ),
-      d: piece(
-        "p",
-        Color.Black,
-        new Forward(Direction.Down, { col: "d", row: 6 })
-      ),
-      e: piece(
-        "p",
-        Color.Black,
-        new Forward(Direction.Down, { col: "e", row: 6 })
-      ),
-      f: piece(
-        "p",
-        Color.Black,
-        new Forward(Direction.Down, { col: "f", row: 6 })
-      ),
-      g: piece(
-        "p",
-        Color.Black,
-        new Forward(Direction.Down, { col: "g", row: 6 })
-      ),
-      h: piece(
-        "p",
-        Color.Black,
-        new Forward(Direction.Down, { col: "h", row: 6 })
-      ),
+      a: piece("p", Color.Black, new Forward(Direction.Down)),
+      b: piece("p", Color.Black, new Forward(Direction.Down)),
+      c: piece("p", Color.Black, new Forward(Direction.Down)),
+      d: piece("p", Color.Black, new Forward(Direction.Down)),
+      e: piece("p", Color.Black, new Forward(Direction.Down)),
+      f: piece("p", Color.Black, new Forward(Direction.Down)),
+      g: piece("p", Color.Black, new Forward(Direction.Down)),
+      h: piece("p", Color.Black, new Forward(Direction.Down)),
     },
     {
       a: piece("R", Color.Black, new Straight()),
@@ -194,7 +144,7 @@ export function createBoard(): Board {
       g: piece("N", Color.Black, new Knight()),
       h: piece("R", Color.Black, new Straight()),
     },
-  ];
+  ]);
 }
 
 export function playSound(sound: string) {

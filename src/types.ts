@@ -1,3 +1,5 @@
+import type Board from "./Board";
+
 export enum Color {
   Black = "black",
   White = "white",
@@ -19,8 +21,6 @@ export interface Square {
 export type Row = {
   [col: string]: Piece | null;
 };
-
-export type Board = Row[];
 
 export interface Movement {
   getAvailableMoves(from: Square, board: Board): Square[][];

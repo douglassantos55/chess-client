@@ -1,7 +1,6 @@
 import { describe, it, expect } from "vitest";
 import L from "@/knight";
-import { createBoard, piece } from "@/utils";
-import { Color } from "@/types";
+import { createBoard } from "@/utils";
 
 describe("L", () => {
   it("moves up", () => {
@@ -64,7 +63,7 @@ describe("L", () => {
     const movement = new L();
     const board = createBoard();
 
-    board[4]["e"] = piece("N", Color.White, movement);
+    board.move("b1", "e5");
     const result = movement.getAvailableMoves({ col: "e", row: 4 }, board);
 
     expect(result).toHaveLength(8);
@@ -84,7 +83,7 @@ describe("L", () => {
     const movement = new L();
     const board = createBoard();
 
-    board[4]["a"] = piece("N", Color.White, movement);
+    board.move("b1", "a5");
     const result = movement.getAvailableMoves({ col: "a", row: 4 }, board);
 
     expect(result).toHaveLength(4);
@@ -100,7 +99,7 @@ describe("L", () => {
     const movement = new L();
     const board = createBoard();
 
-    board[4]["h"] = piece("N", Color.White, movement);
+    board.move("g1", "h5");
     const result = movement.getAvailableMoves({ col: "h", row: 4 }, board);
 
     expect(result).toHaveLength(4);
@@ -137,9 +136,7 @@ describe("L", () => {
     expect(result.flat()).toContainEqual({ col: "c", row: 2 });
     expect(result.flat()).toContainEqual({ col: "d", row: 1 });
 
-    board[2]["c"] = board[0]["b"];
-    board[0]["b"] = null;
-
+    board.move("b1", "c3");
     result = movement.getCaptureSquares({ col: "c", row: 2 }, board);
 
     expect(result.flat()).toHaveLength(8);

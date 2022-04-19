@@ -1,16 +1,15 @@
 import { describe, it, expect } from "vitest";
-import { createBoard, piece } from "@/utils";
+import { createBoard } from "@/utils";
 import Combined from "@/combined";
 import Straight from "@/straight";
 import Diagonal from "@/diagonal";
-import { Color } from "@/types";
 
 describe("Combined", () => {
   it("moves straight up/down and diagonally upright", () => {
     const board = createBoard();
     const combined = new Combined(new Diagonal(), new Straight());
 
-    board[2]["a"] = piece("Q", Color.White, combined);
+    board.move("d1", "a3");
     const result = combined.getAvailableMoves({ col: "a", row: 2 }, board);
 
     expect(result).toHaveLength(3);
@@ -45,7 +44,7 @@ describe("Combined", () => {
     const board = createBoard();
     const combined = new Combined(new Diagonal(), new Straight());
 
-    board[2]["h"] = piece("Q", Color.White, combined);
+    board.move("d1", "h3");
     const result = combined.getAvailableMoves({ col: "h", row: 2 }, board);
 
     expect(result).toHaveLength(3);
@@ -80,7 +79,7 @@ describe("Combined", () => {
     const board = createBoard();
     const combined = new Combined(new Diagonal(), new Straight());
 
-    board[4]["e"] = piece("Q", Color.White, combined);
+    board.move("d1", "e5");
     const result = combined.getAvailableMoves({ col: "e", row: 4 }, board);
 
     expect(result).toHaveLength(8);

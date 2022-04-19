@@ -1,4 +1,5 @@
-import type { Board, Square, Movement } from "@/types";
+import type { Square, Movement } from "@/types";
+import type Board from "./Board";
 
 export enum Direction {
   Up = 1,
@@ -14,23 +15,28 @@ export default class implements Movement {
 
   getAvailableMoves(from: Square, board: Board): Square[][] {
     const available: Square[][] = [];
-    const piece = board[from.row][from.col];
+    const piece = board.piece(from);
     const multiplier = piece?.moveCount === 0 ? 2 : 1;
 
     const moves = [];
-    for (let i = 1; i <= multiplier; i++) {
-      const dest = from.row + this.direction * i;
 
-      if (dest < 0 || dest >= 8 || board[dest][from.col] != null) {
+    const range =
+      this.direction == Direction.Up
+        ? board.up(from, multiplier)
+        : board.down(from, multiplier);
+
+    for (const square of range) {
+      if (board.piece(square) != null) {
         break;
       }
-      moves.push({ col: from.col, row: dest });
+      moves.push(square);
     }
+
     available.push(moves);
 
     const captures = this.getCaptureSquares(from, board);
     for (const square of captures.flat()) {
-      const target = board[square.row][square.col];
+      const target = board.piece(square);
       if (target != null && target.color != piece?.color) {
         available.push([square]);
       }
@@ -40,20 +46,20 @@ export default class implements Movement {
   }
 
   getCaptureSquares(from: Square, board: Board): Square[][] {
-    const available: Square[][] = [];
+    const available: Square[] = [];
+    const source = board.offset(from, 0, this.direction);
 
-    const colIdx = from.col.charCodeAt(0);
-    const leftColumn = String.fromCharCode(colIdx - 1);
-    const rightColumn = String.fromCharCode(colIdx + 1);
-
-    if (from.row > 0 && from.row < 7 && leftColumn >= "a") {
-      available.push([{ col: leftColumn, row: from.row + this.direction }]);
+    if (source) {
+      const right = board.offset(source, 1, 0);
+      if (right) {
+        available.push(right);
+      }
+      const left = board.offset(source, -1, 0);
+      if (left) {
+        available.push(left);
+      }
     }
 
-    if (from.row > 0 && from.row < 7 && rightColumn <= "h") {
-      available.push([{ col: rightColumn, row: from.row + this.direction }]);
-    }
-
-    return available;
+    return [available];
   }
 }

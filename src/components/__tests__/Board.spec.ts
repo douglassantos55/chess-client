@@ -67,7 +67,7 @@ describe("Board", () => {
     await board.get(".piece.black").trigger("click");
     await board.get(".square.a5").trigger("click");
 
-    expect(board.vm.board[4]["a"].moveCount).toBe(1);
+    expect(board.vm.board.piece({ row: 4, col: "a" }).moveCount).toBe(1);
   });
 
   it("clears selected piece after moving", async () => {

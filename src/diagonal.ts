@@ -1,4 +1,5 @@
-import type { Board, Movement, Square } from "@/types";
+import type { Movement, Square } from "@/types";
+import type Board from "./Board";
 
 export default class implements Movement {
   private defended: Square[];
@@ -27,7 +28,7 @@ export default class implements Movement {
   getSquaresUp(from: Square, board: Board): Square[][] {
     const squaresLeft = [];
     const squaresRight = [];
-    const piece = board[from.row][from.col];
+    const piece = board.piece(from);
 
     let doneLeft = false;
     let doneRight = false;
@@ -35,21 +36,19 @@ export default class implements Movement {
     const limit = Math.min(7, this.squares ? from.row + this.squares : 7);
 
     for (let i = from.row + 1; i <= limit; i++) {
+      const offset = i - from.row;
+
       if (!doneLeft) {
-        const left = String.fromCharCode(
-          from.col.charCodeAt(0) - (i - from.row)
-        );
-
-        if (left >= "a") {
-          const pl = board[i][left];
-
-          if (pl == null) {
-            squaresLeft.push({ col: left, row: i });
+        const left = board.offset(from, -offset, offset);
+        if (left) {
+          const target = board.piece(left);
+          if (target == null) {
+            squaresLeft.push(left);
           } else {
-            if (pl.color != piece?.color) {
-              squaresLeft.push({ col: left, row: i });
+            if (target.color != piece?.color) {
+              squaresLeft.push(left);
             } else {
-              this.defended.push({ col: left, row: i });
+              this.defended.push(left);
             }
             doneLeft = true;
           }
@@ -57,20 +56,16 @@ export default class implements Movement {
       }
 
       if (!doneRight) {
-        const right = String.fromCharCode(
-          from.col.charCodeAt(0) + (i - from.row)
-        );
-
-        if (right <= "h") {
-          const pr = board[i][right];
-
-          if (pr == null) {
-            squaresRight.push({ col: right, row: i });
+        const right = board.offset(from, offset, offset);
+        if (right) {
+          const target = board.piece(right);
+          if (target == null) {
+            squaresRight.push(right);
           } else {
-            if (pr.color != piece?.color) {
-              squaresRight.push({ col: right, row: i });
+            if (target.color != piece?.color) {
+              squaresRight.push(right);
             } else {
-              this.defended.push({ col: right, row: i });
+              this.defended.push(right);
             }
             doneRight = true;
           }
@@ -84,7 +79,7 @@ export default class implements Movement {
   getSquaresDown(from: Square, board: Board): Square[][] {
     const squaresLeft = [];
     const squaresRight = [];
-    const piece = board[from.row][from.col];
+    const piece = board.piece(from);
 
     let doneLeft = false;
     let doneRight = false;
@@ -92,21 +87,19 @@ export default class implements Movement {
     const limit = Math.max(0, this.squares ? from.row - this.squares : 0);
 
     for (let i = from.row - 1; i >= limit; i--) {
+      const offset = from.row - i;
+
       if (!doneLeft) {
-        const left = String.fromCharCode(
-          from.col.charCodeAt(0) - (from.row - i)
-        );
-
-        if (left >= "a") {
-          const pl = board[i][left];
-
-          if (pl == null) {
-            squaresLeft.push({ col: left, row: i });
+        const left = board.offset(from, -offset, -offset);
+        if (left) {
+          const target = board.piece(left);
+          if (target == null) {
+            squaresLeft.push(left);
           } else {
-            if (pl.color != piece?.color) {
-              squaresLeft.push({ col: left, row: i });
+            if (target.color != piece?.color) {
+              squaresLeft.push(left);
             } else {
-              this.defended.push({ col: left, row: i });
+              this.defended.push(left);
             }
 
             doneLeft = true;
@@ -115,20 +108,16 @@ export default class implements Movement {
       }
 
       if (!doneRight) {
-        const right = String.fromCharCode(
-          from.col.charCodeAt(0) + (from.row - i)
-        );
-
-        if (right <= "h") {
-          const pr = board[i][right];
-
-          if (pr == null) {
-            squaresRight.push({ col: right, row: i });
+        const right = board.offset(from, offset, -offset);
+        if (right) {
+          const target = board.piece(right);
+          if (target == null) {
+            squaresRight.push(right);
           } else {
-            if (pr.color != piece?.color) {
-              squaresRight.push({ col: right, row: i });
+            if (target.color != piece?.color) {
+              squaresRight.push(right);
             } else {
-              this.defended.push({ col: right, row: i });
+              this.defended.push(right);
             }
             doneRight = true;
           }

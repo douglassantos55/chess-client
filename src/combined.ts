@@ -1,4 +1,5 @@
-import type { Board, Movement, Square } from "@/types";
+import type { Movement, Square } from "@/types";
+import type Board from "./Board";
 
 export default class implements Movement {
   private movements: Movement[] = [];

@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import Square from "@/components/Square.vue";
-import { playSound, createBoard } from "@/utils";
+import { parseSquare, playSound, createBoard } from "@/utils";
+import { Color } from "@/types";
 import moveAudio from "../assets/move.webm";
 import captureAudio from "../assets/capture.webm";
 import checkAudio from "../assets/move-check.webm";
@@ -20,13 +21,12 @@ function showAvailableMoves() {
     // make it as if the piece was not there so that threats go through to the
     // squares behind, preventing the piece from moving and exposing the king
     // by filtering out the moves that are not within the threatened squares
-    board.value[square.row][square.col] = null;
-    const threatenedSquares = getThreats()[piece.color];
-    board.value[square.row][square.col] = piece;
+    const king = board.value.find("K", piece.color);
+    const threats = board.value.getThreatsAgainst(king, piece.color, [square]);
 
-    if (threatenedSquares && piece.notation !== "K") {
+    if (threats.length > 0 && piece.notation !== "K") {
       moves = moves.filter((square: Square) => {
-        for (const threat of threatenedSquares.flat()) {
+        for (const threat of threats.flat()) {
           if (square.col === threat.col && square.row === threat.row) {
             return true;
           }
@@ -65,14 +65,9 @@ function Move(source: Square, dest: Square) {
   );
 
   if (available) {
-    const piece = board.value[source.row][source.col];
-    const captured = board.value[dest.row][dest.col];
+    const captured = board.value.move(parseSquare(source), parseSquare(dest));
 
-    board.value[dest.row][dest.col] = piece;
-    board.value[source.row][source.col] = null;
-
-    piece.moveCount++;
-    checkForCheck();
+    checkForCheck(selectedPiece.value.piece.color);
 
     if (!inCheck.value) {
       if (captured) {
@@ -84,41 +79,19 @@ function Move(source: Square, dest: Square) {
   }
 }
 
-function getThreats(): Square[][] {
-  const threats = {};
-  for (const row in board.value) {
-    for (const col in board.value[row]) {
-      const target = board.value[parseInt(row)][col];
-      if (target != null) {
-        const captures = target.movement.getCaptureSquares(
-          { col, row: parseInt(row) },
-          board.value
-        );
-
-        captures.forEach((squares: Square[]) => {
-          for (const square of squares) {
-            const piece = board.value[square.row][square.col];
-            if (piece && piece.color != target.color && piece.notation == "K") {
-              if (!threats[piece.color]) {
-                threats[piece.color] = [];
-              }
-              threats[piece.color].push([
-                { col, row: parseInt(row) },
-                ...squares,
-              ]);
-            }
-          }
-        });
-      }
-    }
-  }
-  return threats;
-}
-
-function checkForCheck() {
+function checkForCheck(color: Color) {
   inCheck.value = false;
 
-  if (Object.values(getThreats()).length !== 0) {
+  if (color === Color.White) {
+    color = Color.Black;
+  } else {
+    color = Color.White;
+  }
+
+  const king = board.value.find("K", color);
+  const threats = board.value.getThreatsAgainst(king, color);
+
+  if (threats.length > 0) {
     inCheck.value = true;
     playSound(checkAudio);
   }
@@ -127,7 +100,12 @@ function checkForCheck() {
 
 <template>
   <div class="board" @contextmenu.prevent="clearSelected">
-    <div class="row" v-for="(row, idx) in board" :key="idx" :data-row="idx + 1">
+    <div
+      class="row"
+      v-for="(row, idx) in board.squares()"
+      :key="idx"
+      :data-row="idx + 1"
+    >
       <Square
         v-for="(piece, col) in row"
         :key="`${col}${idx}`"

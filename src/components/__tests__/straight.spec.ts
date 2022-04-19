@@ -4,12 +4,11 @@ import { createBoard, piece } from "@/utils";
 import { Color } from "@/types";
 
 describe("Straight", () => {
-  it("avaible moves at middle of the board", () => {
+  it("available moves at middle of the board", () => {
     const straight = new Straight();
     const board = createBoard();
 
-    board[0]["a"] = null;
-    board[3]["d"] = piece("R", Color.White, straight);
+    board.move("a1", "d4");
     const result = straight.getAvailableMoves({ col: "d", row: 3 }, board);
 
     expect(result).toHaveLength(4);
@@ -41,8 +40,7 @@ describe("Straight", () => {
     const straight = new Straight();
     const board = createBoard();
 
-    board[0]["a"] = null;
-    board[2]["a"] = piece("R", Color.White, straight);
+    board.move("a1", "a3");
     const result = straight.getAvailableMoves({ col: "a", row: 2 }, board);
 
     expect(result).toHaveLength(2);
@@ -70,8 +68,7 @@ describe("Straight", () => {
     const straight = new Straight();
     const board = createBoard();
 
-    board[0]["a"] = null;
-    board[2]["h"] = piece("R", Color.White, straight);
+    board.move("a1", "h3");
     const result = straight.getAvailableMoves({ col: "h", row: 2 }, board);
 
     expect(result).toHaveLength(2);
@@ -110,7 +107,7 @@ describe("Straight", () => {
     const straight = new Straight();
 
     const board = createBoard();
-    board[1]["a"] = null;
+    board.move("a2", "b3");
 
     const result = straight.getAvailableMoves({ col: "a", row: 0 }, board);
 
@@ -131,7 +128,7 @@ describe("Straight", () => {
     const straight = new Straight(1);
 
     const board = createBoard();
-    board[3]["e"] = piece("K", Color.White, straight);
+    board.set({ col: "e", row: 3 }, piece("K", Color.White, straight));
 
     const result = straight.getAvailableMoves({ col: "e", row: 3 }, board);
 
@@ -148,7 +145,7 @@ describe("Straight", () => {
     const straight = new Straight(1);
 
     const board = createBoard();
-    board[2]["e"] = piece("K", Color.White, straight);
+    board.set({ col: "e", row: 2 }, piece("K", Color.White, straight));
 
     const result = straight.getAvailableMoves({ col: "e", row: 2 }, board);
 
@@ -211,7 +208,7 @@ describe("Straight", () => {
     const straight = new Straight(2);
     const board = createBoard();
 
-    board[2]["h"] = piece("random", Color.White, straight);
+    board.set({ col: "h", row: 2 }, piece("random", Color.White, straight));
     const result = straight.getAvailableMoves({ col: "h", row: 2 }, board);
 
     expect(result).toHaveLength(2);
@@ -237,9 +234,7 @@ describe("Straight", () => {
     expect(result.flat()).toContainEqual({ row: 1, col: "a" });
     expect(result.flat()).toContainEqual({ row: 0, col: "b" });
 
-    board[3]["a"] = board[1]["a"];
-    board[1]["a"] = null;
-
+    board.move("a2", "a4");
     result = straight.getCaptureSquares({ row: 0, col: "a" }, board);
 
     expect(result.flat()).toHaveLength(4);

@@ -1,7 +1,6 @@
 import { expect, describe, it } from "vitest";
 import Forward, { Direction } from "@/forward";
-import { createBoard, piece } from "@/utils";
-import { Color } from "@/types";
+import { createBoard } from "@/utils";
 
 describe("Forward", () => {
   it("moves forward", () => {
@@ -44,8 +43,7 @@ describe("Forward", () => {
     const forward = new Forward(Direction.Up);
     const board = createBoard();
 
-    board[6]["b"] = null;
-    board[2]["b"] = piece("p", Color.Black, new Forward(Direction.Down));
+    board.move("b7", "b3");
 
     const result = forward.getAvailableMoves({ col: "a", row: 1 }, board);
 
@@ -63,8 +61,7 @@ describe("Forward", () => {
     const forward = new Forward(Direction.Up);
     const board = createBoard();
 
-    board[6]["g"] = null;
-    board[2]["g"] = piece("p", Color.Black, new Forward(Direction.Down));
+    board.move("g7", "g3");
 
     const result = forward.getAvailableMoves({ col: "h", row: 1 }, board);
 
@@ -82,11 +79,8 @@ describe("Forward", () => {
     const forward = new Forward(Direction.Up);
     const board = createBoard();
 
-    board[6]["c"] = null;
-    board[4]["c"] = piece("p", Color.Black, new Forward(Direction.Down));
-
-    board[6]["a"] = null;
-    board[4]["a"] = piece("p", Color.Black, new Forward(Direction.Down));
+    board.move("c7", "c5");
+    board.move("a7", "a5");
 
     const result = forward.getAvailableMoves({ col: "b", row: 3 }, board);
 
@@ -102,16 +96,9 @@ describe("Forward", () => {
     const forward = new Forward(Direction.Down);
     const board = createBoard();
 
-    board[6]["e"] = null;
-    const pawn = piece("p", Color.Black, forward);
-    pawn.moveCount = 1;
-    board[4]["e"] = pawn;
-
-    board[1]["d"] = null;
-    board[3]["d"] = piece("p", Color.White, new Forward(Direction.Down));
-
-    board[1]["f"] = null;
-    board[3]["f"] = piece("p", Color.White, new Forward(Direction.Down));
+    board.move("e7", "e5");
+    board.move("d2", "d4");
+    board.move("f2", "f4");
 
     const result = forward.getAvailableMoves({ col: "e", row: 4 }, board);
 
@@ -127,16 +114,12 @@ describe("Forward", () => {
     const forward = new Forward(Direction.Up);
     const board = createBoard();
 
-    board[2]["e"] = board[6]["e"];
-    board[6]["e"] = null;
+    board.move("e7", "e3");
 
     let result = forward.getAvailableMoves({ col: "e", row: 1 }, board);
-
     expect(result.flat()).toHaveLength(0);
 
-    board[3]["e"] = board[2]["e"];
-    board[2]["e"] = null;
-
+    board.move("e3", "e4");
     result = forward.getAvailableMoves({ col: "e", row: 1 }, board);
 
     expect(result).toHaveLength(1);
@@ -148,16 +131,12 @@ describe("Forward", () => {
     const forward = new Forward(Direction.Down);
     const board = createBoard();
 
-    board[5]["e"] = board[1]["e"];
-    board[1]["e"] = null;
-
+    board.move("e2", "e6");
     let result = forward.getAvailableMoves({ col: "e", row: 6 }, board);
 
     expect(result.flat()).toHaveLength(0);
 
-    board[4]["e"] = board[5]["e"];
-    board[5]["e"] = null;
-
+    board.move("e6", "e5");
     result = forward.getAvailableMoves({ col: "e", row: 6 }, board);
 
     expect(result).toHaveLength(1);

@@ -1,4 +1,5 @@
-import type { Board, Movement, Square } from "./types";
+import type Board from "./Board";
+import type { Movement, Square } from "./types";
 
 export default class implements Movement {
   public defended: Square[];
@@ -29,36 +30,33 @@ export default class implements Movement {
   getVerticalMoves(from: Square, board: Board): Square[][] {
     const up = [];
     const down = [];
-    const piece = board[from.row][from.col];
-    const upLimit = Math.max(0, this.squares ? from.row - this.squares : 0);
+    const piece = board.piece(from);
 
     // up
-    for (let i = from.row - 1; i >= upLimit; i--) {
-      const p = board[i][from.col];
-      if (p == null) {
-        up.push({ col: from.col, row: i });
+    for (const square of board.up(from, this.squares)) {
+      const target = board.piece(square);
+      if (target == null) {
+        up.push(square);
       } else {
-        if (p.color != piece?.color) {
-          up.push({ col: from.col, row: i });
+        if (target.color != piece?.color) {
+          up.push(square);
         } else {
-          this.defended.push({ col: from.col, row: i });
+          this.defended.push(square);
         }
         break;
       }
     }
 
     // down
-    const downLimit = Math.min(7, this.squares ? from.row + this.squares : 7);
-
-    for (let i = from.row + 1; i <= downLimit; i++) {
-      const p = board[i][from.col];
-      if (p == null) {
-        down.push({ col: from.col, row: i });
+    for (const square of board.down(from, this.squares)) {
+      const target = board.piece(square);
+      if (target == null) {
+        down.push(square);
       } else {
-        if (p.color != piece?.color) {
-          down.push({ col: from.col, row: i });
+        if (target.color != piece?.color) {
+          down.push(square);
         } else {
-          this.defended.push({ col: from.col, row: i });
+          this.defended.push(square);
         }
         break;
       }
@@ -70,44 +68,35 @@ export default class implements Movement {
   getHorizontalMoves(from: Square, board: Board): Square[][] {
     const left = [];
     const right = [];
-    const piece = board[from.row][from.col];
-    const source = from.col.charCodeAt(0);
+    const piece = board.piece(from);
 
     // left
-    const a = "a".charCodeAt(0);
-    const leftLimit = Math.max(a, this.squares ? source - this.squares : a);
+    for (const square of board.left(from, this.squares)) {
+      const target = board.piece(square);
 
-    for (let c = from.col.charCodeAt(0) - 1; c >= leftLimit; c--) {
-      const col = String.fromCharCode(c);
-      const p = board[from.row][col];
-
-      if (p == null) {
-        left.push({ col, row: from.row });
+      if (target == null) {
+        left.push(square);
       } else {
-        if (p.color != piece?.color) {
-          left.push({ col, row: from.row });
+        if (target.color != piece?.color) {
+          left.push(square);
         } else {
-          this.defended.push({ col, row: from.row });
+          this.defended.push(square);
         }
         break;
       }
     }
 
     // right
-    const h = "h".charCodeAt(0);
-    const rightLimit = Math.min(h, this.squares ? source + this.squares : h);
+    for (const square of board.right(from, this.squares)) {
+      const target = board.piece(square);
 
-    for (let c = from.col.charCodeAt(0) + 1; c <= rightLimit; c++) {
-      const col = String.fromCharCode(c);
-      const p = board[from.row][col];
-
-      if (p == null) {
-        right.push({ col, row: from.row });
+      if (target == null) {
+        right.push(square);
       } else {
-        if (p.color != piece?.color) {
-          right.push({ col, row: from.row });
+        if (target.color != piece?.color) {
+          right.push(square);
         } else {
-          this.defended.push({ col, row: from.row });
+          this.defended.push(square);
         }
         break;
       }

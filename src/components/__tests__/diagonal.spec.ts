@@ -8,7 +8,7 @@ describe("Diagonal", () => {
     const diagonal = new Diagonal();
     const board = createBoard();
 
-    board[2]["a"] = piece("B", Color.White, diagonal);
+    board.move("c1", "a3");
     const result = diagonal.getAvailableMoves({ col: "a", row: 2 }, board);
 
     expect(result).toHaveLength(1);
@@ -26,7 +26,7 @@ describe("Diagonal", () => {
     const diagonal = new Diagonal();
     const board = createBoard();
 
-    board[2]["h"] = piece("B", Color.White, diagonal);
+    board.move("f1", "h3");
     const result = diagonal.getAvailableMoves({ col: "h", row: 2 }, board);
 
     expect(result).toHaveLength(1);
@@ -44,7 +44,7 @@ describe("Diagonal", () => {
     const diagonal = new Diagonal();
     const board = createBoard();
 
-    board[5]["a"] = piece("B", Color.Black, diagonal);
+    board.move("c8", "a6");
     const result = diagonal.getAvailableMoves({ col: "a", row: 5 }, board);
 
     expect(result).toHaveLength(1);
@@ -62,7 +62,7 @@ describe("Diagonal", () => {
     const diagonal = new Diagonal();
     const board = createBoard();
 
-    board[5]["h"] = piece("B", Color.Black, diagonal);
+    board.move("f8", "h6");
     const result = diagonal.getAvailableMoves({ col: "h", row: 5 }, board);
 
     expect(result).toHaveLength(1);
@@ -80,7 +80,7 @@ describe("Diagonal", () => {
     const diagonal = new Diagonal();
     const board = createBoard();
 
-    board[2]["d"] = piece("B", Color.White, diagonal);
+    board.move("c1", "d3");
     const result = diagonal.getAvailableMoves({ col: "d", row: 2 }, board);
 
     expect(result).toHaveLength(2);
@@ -104,7 +104,7 @@ describe("Diagonal", () => {
     const diagonal = new Diagonal();
     const board = createBoard();
 
-    board[5]["d"] = piece("B", Color.Black, diagonal);
+    board.move("c8", "d6");
     const result = diagonal.getAvailableMoves({ col: "d", row: 5 }, board);
 
     expect(result).toHaveLength(2);
@@ -128,7 +128,7 @@ describe("Diagonal", () => {
     const diagonal = new Diagonal();
     const board = createBoard();
 
-    board[4]["d"] = piece("B", Color.White, diagonal);
+    board.move("c1", "d5");
     const result = diagonal.getAvailableMoves({ col: "d", row: 4 }, board);
 
     expect(result).toHaveLength(4);
@@ -178,11 +178,9 @@ describe("Diagonal", () => {
     const diagonal = new Diagonal();
     const board = createBoard();
 
-    board[1]["c"] = null;
-    board[1]["d"] = null;
-    board[2]["c"] = piece("p", Color.White, diagonal);
-    board[4]["d"] = piece("p", Color.White, diagonal);
-    board[2]["b"] = piece("B", Color.White, diagonal);
+    board.move("c2", "c3");
+    board.move("d2", "d5");
+    board.move("c1", "b3");
 
     const result = diagonal.getAvailableMoves({ col: "b", row: 2 }, board);
 
@@ -198,10 +196,9 @@ describe("Diagonal", () => {
     const diagonal = new Diagonal();
     const board = createBoard();
 
-    board[6]["d"] = null;
-    board[4]["d"] = piece("p", Color.Black, diagonal);
-    board[2]["b"] = piece("B", Color.White, diagonal);
-    board[2]["f"] = piece("B", Color.White, diagonal);
+    board.move("d7", "d5");
+    board.move("c1", "b3");
+    board.move("f1", "f3");
 
     const result1 = diagonal.getAvailableMoves({ col: "b", row: 2 }, board);
     const result2 = diagonal.getAvailableMoves({ col: "f", row: 2 }, board);
@@ -233,7 +230,7 @@ describe("Diagonal", () => {
     const diagonal = new Diagonal(1);
     const board = createBoard();
 
-    board[3]["e"] = piece("K", Color.White, diagonal);
+    board.set({ col: "e", row: 3 }, piece("K", Color.White, diagonal));
     const result = diagonal.getAvailableMoves({ col: "e", row: 3 }, board);
 
     expect(result).toHaveLength(4);
@@ -249,7 +246,7 @@ describe("Diagonal", () => {
     const diagonal = new Diagonal(1);
     const board = createBoard();
 
-    board[0]["c"] = piece("K", Color.White, diagonal);
+    board.set({ col: "c", row: 0 }, piece("K", Color.White, diagonal));
     const result = diagonal.getAvailableMoves({ col: "c", row: 0 }, board);
 
     expect(result).toHaveLength(0);
@@ -260,7 +257,7 @@ describe("Diagonal", () => {
     const diagonal = new Diagonal(1);
     const board = createBoard();
 
-    board[7]["c"] = piece("K", Color.Black, diagonal);
+    board.set({ col: "c", row: 7 }, piece("K", Color.Black, diagonal));
     const result = diagonal.getAvailableMoves({ col: "c", row: 7 }, board);
 
     expect(result).toHaveLength(0);
@@ -271,7 +268,7 @@ describe("Diagonal", () => {
     const diagonal = new Diagonal(1);
     const board = createBoard();
 
-    board[0]["a"] = piece("K", Color.White, diagonal);
+    board.set({ col: "a", row: 0 }, piece("K", Color.White, diagonal));
     const result = diagonal.getAvailableMoves({ col: "a", row: 0 }, board);
 
     expect(result).toHaveLength(0);
@@ -282,7 +279,7 @@ describe("Diagonal", () => {
     const diagonal = new Diagonal(1);
     const board = createBoard();
 
-    board[7]["h"] = piece("K", Color.Black, diagonal);
+    board.set({ col: "h", row: 7 }, piece("K", Color.Black, diagonal));
     const result = diagonal.getAvailableMoves({ col: "h", row: 7 }, board);
 
     expect(result).toHaveLength(0);
@@ -293,7 +290,7 @@ describe("Diagonal", () => {
     const diagonal = new Diagonal(2);
     const board = createBoard();
 
-    board[2]["h"] = piece("random", Color.White, diagonal);
+    board.set({ col: "h", row: 2 }, piece("random", Color.White, diagonal));
     const result = diagonal.getAvailableMoves({ col: "h", row: 2 }, board);
 
     expect(result).toHaveLength(1);
@@ -314,14 +311,9 @@ describe("Diagonal", () => {
     expect(result.flat()).toContainEqual({ col: "b", row: 1 });
     expect(result.flat()).toContainEqual({ col: "d", row: 1 });
 
-    board[3]["d"] = board[1]["d"];
-    board[1]["d"] = null;
-
-    board[2]["e"] = board[1]["e"];
-    board[1]["e"] = null;
-
-    board[2]["b"] = board[1]["b"];
-    board[1]["b"] = null;
+    board.move("d2", "d4");
+    board.move("e2", "e3");
+    board.move("b2", "b3");
 
     result = diagonal.getCaptureSquares({ col: "c", row: 0 }, board);
 

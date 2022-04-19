@@ -3,25 +3,22 @@ import Safe from "@/safe";
 import Straight from "@/straight";
 import Diagonal from "@/diagonal";
 import Combined from "@/combined";
-import { createBoard, piece } from "@/utils";
-import { Color } from "@/types";
+import { createBoard } from "@/utils";
 
 describe("Safe", () => {
   it("does not loop forever", () => {
     const safe = new Safe(new Combined(new Diagonal(1), new Straight(1)));
     const board = createBoard();
 
-    board[3]["e"] = board[1]["e"];
-    board[1]["e"] = null;
-
+    board.move("e2", "e4");
     let result = safe.getAvailableMoves({ col: "e", row: 0 }, board);
+
     expect(result).toHaveLength(1);
     expect(result.flat()).toHaveLength(1);
 
-    board[4]["e"] = board[6]["e"];
-    board[6]["e"] = null;
-
+    board.move("e7", "e5");
     result = safe.getAvailableMoves({ col: "e", row: 0 }, board);
+
     expect(result).toHaveLength(1);
     expect(result.flat()).toHaveLength(1);
   });
@@ -30,11 +27,9 @@ describe("Safe", () => {
     const safe = new Safe(new Combined(new Diagonal(1), new Straight(1)));
     const board = createBoard();
 
-    board[0]["e"] = null;
-    board[2]["e"] = piece("K", Color.White, safe);
-
-    board[5]["c"] = piece("B", Color.Black, new Diagonal());
-    board[5]["f"] = piece("B", Color.Black, new Diagonal());
+    board.move("e1", "e3");
+    board.move("c8", "c6");
+    board.move("f8", "f6");
 
     const result = safe.getAvailableMoves({ col: "e", row: 2 }, board);
 
@@ -46,16 +41,10 @@ describe("Safe", () => {
     const safe = new Safe(new Combined(new Diagonal(1), new Straight(1)));
     const board = createBoard();
 
-    board[0]["e"] = null;
-    board[2]["e"] = piece("K", Color.White, safe);
-
-    board[5]["c"] = piece("B", Color.Black, new Diagonal());
-    board[5]["f"] = piece("B", Color.Black, new Diagonal());
-    board[4]["f"] = piece(
-      "Q",
-      Color.Black,
-      new Combined(new Straight(), new Diagonal())
-    );
+    board.move("e1", "e3");
+    board.move("c8", "c6");
+    board.move("f8", "f6");
+    board.move("d8", "f5");
 
     const result = safe.getAvailableMoves({ col: "e", row: 2 }, board);
     expect(result).toHaveLength(0);
@@ -66,16 +55,10 @@ describe("Safe", () => {
     const safe = new Safe(new Combined(new Diagonal(1), new Straight(1)));
     const board = createBoard();
 
-    board[0]["e"] = null;
-    board[2]["e"] = piece("K", Color.White, safe);
-
-    board[5]["c"] = piece("B", Color.White, new Diagonal());
-    board[5]["f"] = piece("B", Color.White, new Diagonal());
-    board[4]["f"] = piece(
-      "Q",
-      Color.White,
-      new Combined(new Straight(), new Diagonal())
-    );
+    board.move("e1", "e3");
+    board.move("c1", "c6");
+    board.move("f1", "f6");
+    board.move("d1", "f5");
 
     const result = safe.getAvailableMoves({ col: "e", row: 2 }, board);
 
@@ -93,8 +76,7 @@ describe("Safe", () => {
     const safe = new Safe(new Combined(new Diagonal(1), new Straight(1)));
     const board = createBoard();
 
-    board[0]["e"] = null;
-    board[4]["e"] = piece("K", Color.White, safe);
+    board.move("e1", "e5");
 
     const result = safe.getAvailableMoves({ col: "e", row: 4 }, board);
 
@@ -112,23 +94,12 @@ describe("Safe", () => {
     const safe = new Safe(new Combined(new Diagonal(1), new Straight(1)));
     const board = createBoard();
 
-    board[3]["e"] = board[1]["e"];
-    board[1]["e"] = null;
-
-    board[4]["e"] = board[6]["e"];
-    board[6]["e"] = null;
-
-    board[2]["g"] = board[1]["g"];
-    board[1]["g"] = null;
-
-    board[2]["f"] = board[0]["e"];
-    board[0]["e"] = null;
-
-    board[4]["g"] = board[7]["e"];
-    board[7]["e"] = null;
-
-    board[2]["d"] = board[1]["d"];
-    board[1]["d"] = null;
+    board.move("e2", "e4");
+    board.move("e7", "e5");
+    board.move("g2", "g3");
+    board.move("e1", "f3");
+    board.move("e8", "g5");
+    board.move("d2", "d3");
 
     const result = safe.getAvailableMoves({ col: "g", row: 4 }, board);
 
@@ -144,14 +115,9 @@ describe("Safe", () => {
     const safe = new Safe(new Combined(new Diagonal(1), new Straight(1)));
     const board = createBoard();
 
-    board[4]["e"] = board[7]["e"];
-    board[7]["e"] = null;
-
-    board[3]["d"] = board[0]["a"];
-    board[0]["a"] = null;
-
-    board[2]["c"] = board[0]["c"];
-    board[0]["c"] = null;
+    board.move("e8", "e5");
+    board.move("a1", "d4");
+    board.move("c1", "c3");
 
     const result = safe.getAvailableMoves({ row: 4, col: "e" }, board);
 
@@ -167,14 +133,9 @@ describe("Safe", () => {
     const safe = new Safe(new Combined(new Diagonal(1), new Straight(1)));
     const board = createBoard();
 
-    board[4]["e"] = board[7]["e"];
-    board[7]["e"] = null;
-
-    board[3]["d"] = board[0]["a"];
-    board[0]["a"] = null;
-
-    board[3]["h"] = board[0]["h"];
-    board[0]["h"] = null;
+    board.move("e8", "e5");
+    board.move("a1", "d4");
+    board.move("h1", "h4");
 
     const result = safe.getAvailableMoves({ row: 4, col: "e" }, board);
 
@@ -190,14 +151,9 @@ describe("Safe", () => {
     const safe = new Safe(new Combined(new Diagonal(1), new Straight(1)));
     const board = createBoard();
 
-    board[4]["e"] = board[7]["e"];
-    board[7]["e"] = null;
-
-    board[3]["d"] = board[0]["a"];
-    board[0]["a"] = null;
-
-    board[2]["d"] = board[0]["h"];
-    board[0]["h"] = null;
+    board.move("e8", "e5");
+    board.move("a1", "d4");
+    board.move("h1", "d3");
 
     const result = safe.getAvailableMoves({ row: 4, col: "e" }, board);
 
@@ -213,14 +169,9 @@ describe("Safe", () => {
     const safe = new Safe(new Combined(new Diagonal(1), new Straight(1)));
     const board = createBoard();
 
-    board[4]["e"] = board[7]["e"];
-    board[7]["e"] = null;
-
-    board[3]["d"] = board[0]["a"];
-    board[0]["a"] = null;
-
-    board[4]["b"] = board[0]["b"];
-    board[0]["b"] = null;
+    board.move("e8", "e5");
+    board.move("a1", "d4");
+    board.move("b1", "b5");
 
     const result = safe.getAvailableMoves({ row: 4, col: "e" }, board);
 
@@ -236,14 +187,9 @@ describe("Safe", () => {
     const safe = new Safe(new Combined(new Diagonal(1), new Straight(1)));
     const board = createBoard();
 
-    board[4]["e"] = board[7]["e"];
-    board[7]["e"] = null;
-
-    board[3]["d"] = board[0]["a"];
-    board[0]["a"] = null;
-
-    board[2]["e"] = board[1]["e"];
-    board[1]["e"] = null;
+    board.move("e8", "e5");
+    board.move("a1", "d4");
+    board.move("e2", "e3");
 
     const result = safe.getAvailableMoves({ row: 4, col: "e" }, board);
 
@@ -259,14 +205,9 @@ describe("Safe", () => {
     const safe = new Safe(new Combined(new Diagonal(1), new Straight(1)));
     const board = createBoard();
 
-    board[4]["e"] = board[7]["e"];
-    board[7]["e"] = null;
-
-    board[3]["d"] = board[0]["a"];
-    board[0]["a"] = null;
-
-    board[2]["c"] = board[1]["c"];
-    board[1]["c"] = null;
+    board.move("e8", "e5");
+    board.move("a1", "d4");
+    board.move("c2", "c3");
 
     const result = safe.getAvailableMoves({ row: 4, col: "e" }, board);
 
