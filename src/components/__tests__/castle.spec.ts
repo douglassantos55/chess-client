@@ -6,7 +6,7 @@ import Diagonal from "@/diagonal";
 import Combined from "@/combined";
 import { createBoard } from "@/utils";
 import type { Piece } from "@/types";
-import { nextTick } from "process";
+import { nextTick } from "vue";
 import { ref } from "vue";
 
 describe("Castle", () => {
@@ -142,7 +142,7 @@ describe("Castle", () => {
     expect(result).toContainEqual([{ col: "f", row: 0 }]);
   });
 
-  it("swaps white's king and rook on the right", () => {
+  it("swaps white's king and rook on the right", async () => {
     const board = ref(createBoard());
 
     board.value.move("f1", "f5");
@@ -157,16 +157,22 @@ describe("Castle", () => {
     castle.getAvailableMoves({ col: "e", row: 0 }, board.value);
     board.value.move("e1", "g1");
 
-    nextTick(() => {
-      //expect(board.piece({ col: 'f', row: 0 })).toContain({ notation: "R", color: "white" });
-      expect(board.value.piece({ col: "h", row: 0 })).toBe(null);
+    await nextTick();
 
-      //expect(board.piece({ col: 'g', row: 0 })).toContain({ notation: "K", color: "white" });
-      expect(board.value.piece({ col: "e", row: 0 })).toBe(null);
+    expect(board.value.piece({ col: "f", row: 0 })).toContain({
+      notation: "R",
+      color: "white",
     });
+    expect(board.value.piece({ col: "h", row: 0 })).toBe(null);
+
+    expect(board.value.piece({ col: "g", row: 0 })).toContain({
+      notation: "K",
+      color: "white",
+    });
+    expect(board.value.piece({ col: "e", row: 0 })).toBe(null);
   });
 
-  it("swaps white's king and rook on the left", () => {
+  it("swaps white's king and rook on the left", async () => {
     const board = ref(createBoard());
 
     board.value.move("b1", "b5");
@@ -182,19 +188,19 @@ describe("Castle", () => {
     castle.getAvailableMoves({ col: "e", row: 0 }, board.value);
     board.value.move("e1", "c1");
 
-    nextTick(() => {
-      expect(board.value.piece({ col: "d", row: 0 })).toContain({
-        notation: "R",
-        color: "white",
-      });
-      expect(board.value.piece({ col: "a", row: 0 })).toBe(null);
+    await nextTick();
 
-      expect(board.value.piece({ col: "c", row: 0 })).toContain({
-        notation: "K",
-        color: "white",
-      });
-      expect(board.value.piece({ col: "e", row: 0 })).toBe(null);
+    expect(board.value.piece({ col: "d", row: 0 })).toContain({
+      notation: "R",
+      color: "white",
     });
+    expect(board.value.piece({ col: "a", row: 0 })).toBe(null);
+
+    expect(board.value.piece({ col: "c", row: 0 })).toContain({
+      notation: "K",
+      color: "white",
+    });
+    expect(board.value.piece({ col: "e", row: 0 })).toBe(null);
   });
 
   it("displays black's available squares on the right", () => {
@@ -323,7 +329,7 @@ describe("Castle", () => {
     expect(result).toContainEqual([{ col: "f", row: 7 }]);
   });
 
-  it("swaps black's king and rook on the right", () => {
+  it("swaps black's king and rook on the right", async () => {
     const board = ref(createBoard());
 
     board.value.move("f8", "f5");
@@ -338,22 +344,21 @@ describe("Castle", () => {
     castle.getAvailableMoves({ col: "e", row: 7 }, board.value);
     board.value.move("e8", "g8");
 
-    nextTick(() => {
-      expect(board.value.piece({ col: "f", row: 7 })).toContain({
-        notation: "R",
-        color: "black",
-      });
-      expect(board.value.piece({ col: "h", row: 7 })).toBe(null);
-
-      expect(board.value.piece({ col: "g", row: 7 })).toContain({
-        notation: "K",
-        color: "black",
-      });
-      expect(board.value.piece({ col: "e", row: 7 })).toBe(null);
+    await nextTick();
+    expect(board.value.piece({ col: "f", row: 7 })).toContain({
+      notation: "R",
+      color: "black",
     });
+    expect(board.value.piece({ col: "h", row: 7 })).toBe(null);
+
+    expect(board.value.piece({ col: "g", row: 7 })).toContain({
+      notation: "K",
+      color: "black",
+    });
+    expect(board.value.piece({ col: "e", row: 7 })).toBe(null);
   });
 
-  it("swaps black's king and rook on the left", () => {
+  it("swaps black's king and rook on the left", async () => {
     const board = ref(createBoard());
 
     board.value.move("b8", "b5");
@@ -369,19 +374,18 @@ describe("Castle", () => {
     castle.getAvailableMoves({ col: "e", row: 7 }, board.value);
     board.value.move("e8", "c8");
 
-    nextTick(() => {
-      expect(board.value.piece({ col: "d", row: 7 })).toContain({
-        notation: "R",
-        color: "black",
-      });
-      expect(board.value.piece({ col: "a", row: 7 })).toBe(null);
-
-      expect(board.value.piece({ col: "c", row: 7 })).toContain({
-        notation: "K",
-        color: "black",
-      });
-      expect(board.value.piece({ col: "e", row: 7 })).toBe(null);
+    await nextTick();
+    expect(board.value.piece({ col: "d", row: 7 })).toContain({
+      notation: "R",
+      color: "black",
     });
+    expect(board.value.piece({ col: "a", row: 7 })).toBe(null);
+
+    expect(board.value.piece({ col: "c", row: 7 })).toContain({
+      notation: "K",
+      color: "black",
+    });
+    expect(board.value.piece({ col: "e", row: 7 })).toBe(null);
   });
 
   it("cannot castle if squares are threatened", () => {

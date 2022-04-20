@@ -1,8 +1,10 @@
-import { describe, it, expect } from "vitest";
-
+import { vi, describe, it, expect } from "vitest";
 import { createBoard } from "@/utils";
 import { mount } from "@vue/test-utils";
 import Board from "@/components/Board.vue";
+import { nextTick } from "vue";
+import Server from "@/server";
+import FakeSocket from "./FakeSocket";
 
 describe("Board", () => {
   it("starts with pieces at initial position", () => {
@@ -367,5 +369,38 @@ describe("Board", () => {
       props: { perspective: "black" },
     });
     expect(black.classes()).toContain("black");
+  });
+
+  it("sends moves to server", async () => {
+    const server = new Server(new FakeSocket());
+    const board = mount(Board, { props: { server } });
+
+    const spy = vi.spyOn(server, "send");
+
+    await board.get(".d2").trigger("click");
+    await board.get(".d4").trigger("click");
+
+    expect(spy).toHaveBeenCalledWith("move_piece", { from: "d2", to: "d4" });
+  });
+
+  it("receives moves from server", async () => {
+    const socket = new FakeSocket();
+    const server = new Server(socket);
+    const board = mount(Board, { props: { server } });
+
+    socket.onmessage(
+      new MessageEvent("message", {
+        data: {
+          type: "move_piece",
+          payload: { from: "a2", to: "a4", game_id: "arandomuuid" },
+        },
+      })
+    );
+
+    await nextTick();
+
+    expect(board.get(".a2").find(".piece").exists()).toBe(false);
+    expect(board.get(".a4").find(".piece").text()).toContain("p");
+    expect(board.get(".a4").find(".piece").classes()).toContain("white");
   });
 });

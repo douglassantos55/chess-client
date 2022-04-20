@@ -3,11 +3,13 @@ import { ref } from "vue";
 import Square from "@/components/Square.vue";
 import { parseSquare, playSound, createBoard } from "@/utils";
 import { Color } from "@/types";
+import Server from "@/server";
 import moveAudio from "../assets/move.webm";
 import captureAudio from "../assets/capture.webm";
 import checkAudio from "../assets/move-check.webm";
 
-const { perspective = Color.White } = defineProps<{
+const props = defineProps<{
+  server?: Server;
   perspective?: Color;
 }>();
 
@@ -15,6 +17,19 @@ const inCheck = ref(false);
 const board = ref(createBoard());
 const selectedPiece = ref(null);
 const availableMoves = ref([]);
+
+if (props.server) {
+  props.server.on("move_piece", function (payload) {
+    const { from, to } = payload;
+    const captured = board.value.move(from, to);
+
+    if (captured) {
+      playSound(captureAudio);
+    } else {
+      playSound(moveAudio);
+    }
+  });
+}
 
 function showAvailableMoves() {
   const { piece, square } = selectedPiece.value;
@@ -71,6 +86,13 @@ function Move(source: Square, dest: Square) {
   if (available) {
     const captured = board.value.move(parseSquare(source), parseSquare(dest));
 
+    if (props.server) {
+      props.server.send("move_piece", {
+        from: parseSquare(source),
+        to: parseSquare(dest),
+      });
+    }
+
     checkForCheck(selectedPiece.value.piece.color);
 
     if (!inCheck.value) {
@@ -103,7 +125,10 @@ function checkForCheck(color: Color) {
 </script>
 
 <template>
-  <div :class="['board', perspective]" @contextmenu.prevent="clearSelected">
+  <div
+    :class="['board', props.perspective]"
+    @contextmenu.prevent="clearSelected"
+  >
     <div
       class="row"
       v-for="(row, idx) in board.squares()"
