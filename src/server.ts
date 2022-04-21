@@ -16,7 +16,7 @@ export default class implements Server {
   }
 
   private dispatch(event: MessageEvent) {
-    const { type, payload } = event.data;
+    const { type, payload } = JSON.parse(event.data);
     const listeners = this.listeners[type];
 
     if (listeners) {

@@ -26,7 +26,10 @@ describe("Server", () => {
 
     await new Promise((resolve) => {
       const event = new MessageEvent("message", {
-        data: { type: "move_piece", payload: { from: "e2", to: "e4" } },
+        data: JSON.stringify({
+          type: "move_piece",
+          payload: { from: "e2", to: "e4" },
+        }),
       });
 
       socket.onmessage(event);

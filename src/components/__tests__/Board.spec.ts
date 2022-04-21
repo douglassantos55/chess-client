@@ -390,10 +390,10 @@ describe("Board", () => {
 
     socket.onmessage(
       new MessageEvent("message", {
-        data: {
+        data: JSON.stringify({
           type: "move_piece",
           payload: { from: "a2", to: "a4", game_id: "arandomuuid" },
-        },
+        }),
       })
     );
 
