@@ -3,6 +3,7 @@ import { ref } from "vue";
 import Server from "@/server";
 import Board from "./components/Board.vue";
 import Matchmaker from "./components/Matchmaker.vue";
+import MatchAccept from "./components/MatchAccept.vue";
 
 const server = new Server(new WebSocket("ws://0.0.0.0:8080"));
 
@@ -21,6 +22,7 @@ server.on("game_over", (payload) => {
 </script>
 
 <template>
+  <MatchAccept :server="server" />
   <Board :server="server" :perspective="perspective" />
 
   <aside>
