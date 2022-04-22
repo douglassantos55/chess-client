@@ -21,6 +21,8 @@ server.on("game_over", (payload) => {
 </script>
 
 <template>
+  <Board :server="server" :perspective="perspective" />
+
   <aside>
     <Matchmaker
       :server="server"
@@ -31,8 +33,6 @@ server.on("game_over", (payload) => {
       ]"
     />
   </aside>
-
-  <Board :server="server" :perspective="perspective" />
 </template>
 
 <style>
@@ -40,10 +40,12 @@ body {
   margin: 0;
 }
 aside {
-  width: 20%;
-  padding: 20px;
+  flex-shrink: 0;
   min-height: 100vh;
+  background: #2e2e2e;
+  padding: 20px 40px 0;
   box-sizing: border-box;
+  border-left: 2px solid #3c3c3c;
 }
 #app {
   display: flex;

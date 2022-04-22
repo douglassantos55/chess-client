@@ -150,6 +150,7 @@ function checkForCheck(color: Color) {
 
 <style scoped>
 .board {
+  margin: auto;
   display: flex;
   flex-direction: column-reverse;
 }
