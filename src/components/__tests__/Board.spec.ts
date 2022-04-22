@@ -373,6 +373,22 @@ describe("Board", () => {
 
   it("sends moves to server", async () => {
     const server = new Server(new FakeSocket());
+    const board = mount(Board, { props: { server, gameId: "aoeu" } });
+
+    const spy = vi.spyOn(server, "send");
+
+    await board.get(".d2").trigger("click");
+    await board.get(".d4").trigger("click");
+
+    expect(spy).toHaveBeenCalledWith("move_piece", {
+      from: "d2",
+      to: "d4",
+      game_id: "aoeu",
+    });
+  });
+
+  it("sends moves to server only if there is an active game", async () => {
+    const server = new Server(new FakeSocket());
     const board = mount(Board, { props: { server } });
 
     const spy = vi.spyOn(server, "send");
@@ -380,7 +396,7 @@ describe("Board", () => {
     await board.get(".d2").trigger("click");
     await board.get(".d4").trigger("click");
 
-    expect(spy).toHaveBeenCalledWith("move_piece", { from: "d2", to: "d4" });
+    expect(spy).not.toHaveBeenCalled();
   });
 
   it("receives moves from server", async () => {

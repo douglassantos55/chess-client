@@ -65,6 +65,9 @@ describe("MatchAccept", () => {
     const server = new Server(socket);
     const matchAccept = mount(MatchAccept, { props: { server } });
 
+    // force it to show up
+    matchAccept.vm.gameId = "aoeu";
+
     socket.onmessage(
       new MessageEvent("message", {
         data: JSON.stringify({ type: "wait_other_players" }),

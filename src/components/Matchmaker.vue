@@ -28,12 +28,12 @@ props.server.on("match_canceled", () => {
 
 props.server.on("start_game", () => {
   visible.value = false;
-  waiting.value = false
+  waiting.value = false;
 });
 
 props.server.on("game_over", () => {
   visible.value = true;
-  waiting.value = false
+  waiting.value = false;
 });
 
 function queueUp() {

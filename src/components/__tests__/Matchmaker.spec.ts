@@ -163,9 +163,8 @@ describe("Matchmaker", () => {
     );
 
     await nextTick();
-    expect(matchmaker.vm.waiting).toBe(false)
+    expect(matchmaker.vm.waiting).toBe(false);
   });
-
 
   it("hides when game starts", async () => {
     const socket = new FakeSocket();
