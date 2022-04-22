@@ -10,6 +10,7 @@ import checkAudio from "../assets/move-check.webm";
 
 const props = defineProps<{
   server?: Server;
+  gameId?: string;
   perspective?: Color;
 }>();
 
@@ -86,10 +87,11 @@ function Move(source: Square, dest: Square) {
   if (available) {
     const captured = board.value.move(parseSquare(source), parseSquare(dest));
 
-    if (props.server) {
+    if (props.server && props.gameId) {
       props.server.send("move_piece", {
         from: parseSquare(source),
         to: parseSquare(dest),
+        game_id: props.gameId,
       });
     }
 
