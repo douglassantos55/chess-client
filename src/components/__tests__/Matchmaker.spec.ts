@@ -140,4 +140,79 @@ describe("Matchmaker", () => {
       "disabled"
     );
   });
+
+  it("enables buttons when game starts", async () => {
+    const socket = new FakeSocket();
+    const server = new Server(socket);
+    const matchmaker = mount(Matchmaker, {
+      props: {
+        server,
+        times: [
+          { duration: "5m", increment: "0s", label: "5 min" },
+          { duration: "10m", increment: "0s", label: "10 min" },
+        ],
+      },
+    });
+
+    matchmaker.vm.waiting = true;
+
+    socket.onmessage(
+      new MessageEvent("message", {
+        data: JSON.stringify({ type: "start_game" }),
+      })
+    );
+
+    await nextTick();
+    expect(matchmaker.vm.waiting).toBe(false)
+  });
+
+
+  it("hides when game starts", async () => {
+    const socket = new FakeSocket();
+    const server = new Server(socket);
+    const matchmaker = mount(Matchmaker, {
+      props: {
+        server,
+        times: [
+          { duration: "5m", increment: "0s", label: "5 min" },
+          { duration: "10m", increment: "0s", label: "10 min" },
+        ],
+      },
+    });
+
+    socket.onmessage(
+      new MessageEvent("message", {
+        data: JSON.stringify({ type: "start_game" }),
+      })
+    );
+
+    await nextTick();
+    expect(matchmaker.isVisible()).toBe(false);
+  });
+
+  it("shows when game ends", async () => {
+    const socket = new FakeSocket();
+    const server = new Server(socket);
+    const matchmaker = mount(Matchmaker, {
+      props: {
+        server,
+        times: [
+          { duration: "5m", increment: "0s", label: "5 min" },
+          { duration: "10m", increment: "0s", label: "10 min" },
+        ],
+      },
+    });
+
+    // force it to hide
+    matchmaker.vm.visible = false;
+
+    socket.onmessage(
+      new MessageEvent("message", {
+        data: JSON.stringify({ type: "game_over" }),
+      })
+    );
+
+    await nextTick();
+    expect(matchmaker.isVisible()).toBe(true);
+  });
 });
