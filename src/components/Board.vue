@@ -20,7 +20,7 @@ const selectedPiece = ref(null);
 const availableMoves = ref([]);
 
 if (props.server) {
-  props.server.on("move_piece", function (payload) {
+  props.server.on("start_turn", function (payload) {
     const { from, to } = payload;
     const captured = board.value.move(from, to);
 

@@ -407,8 +407,13 @@ describe("Board", () => {
     socket.onmessage(
       new MessageEvent("message", {
         data: JSON.stringify({
-          type: "move_piece",
-          payload: { from: "a2", to: "a4", game_id: "arandomuuid" },
+          type: "start_turn",
+          payload: {
+            from: "a2",
+            to: "a4",
+            game_id: "arandomuuid",
+            time: 3000000,
+          },
         }),
       })
     );
