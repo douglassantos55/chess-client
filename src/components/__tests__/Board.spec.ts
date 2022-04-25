@@ -613,4 +613,38 @@ describe("Board", () => {
 
     expect(board.vm.playing).toBe(false);
   });
+
+  it("resets board when game ID changes", async () => {
+    const board = mount(Board, {
+      props: { perspective: Color.White },
+    });
+
+    await board.get(".e2").trigger("click");
+    await board.get(".e4").trigger("click");
+
+    expect(board.get(".e2").find(".piece").exists()).toBe(false);
+    expect(board.get(".e4").find(".piece").exists()).toBe(true);
+
+    await board.setProps({ gameId: "uuid" });
+
+    expect(board.get(".e2").find(".piece").exists()).toBe(true);
+    expect(board.get(".e4").find(".piece").exists()).toBe(false);
+  });
+
+  it("resets board only when game ID is not empty", async () => {
+    const board = mount(Board, {
+      props: { perspective: Color.White },
+    });
+
+    await board.get(".e2").trigger("click");
+    await board.get(".e4").trigger("click");
+
+    expect(board.get(".e2").find(".piece").exists()).toBe(false);
+    expect(board.get(".e4").find(".piece").exists()).toBe(true);
+
+    await board.setProps({ gameId: null });
+
+    expect(board.get(".e2").find(".piece").exists()).toBe(false);
+    expect(board.get(".e4").find(".piece").exists()).toBe(true);
+  });
 });

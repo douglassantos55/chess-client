@@ -27,6 +27,15 @@ watch(
   }
 );
 
+watch(
+  () => props.gameId,
+  (gameId) => {
+    if (gameId) {
+      board.value = createBoard();
+    }
+  }
+);
+
 if (props.server) {
   props.server.on("start_turn", function (payload) {
     playing.value = true;
