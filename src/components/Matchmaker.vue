@@ -42,6 +42,10 @@ function queueUp() {
     increment: selectedTime.value.increment,
   });
 }
+function cancel() {
+  waiting.value = false;
+  props.server.send("dequeue");
+}
 </script>
 
 <template>
@@ -66,9 +70,14 @@ function queueUp() {
       success
       data-test="play"
       @click="queueUp"
-      :disabled="!selectedTime || waiting"
+      v-if="!waiting"
+      :disabled="!selectedTime"
     >
       Play
+    </Button>
+
+    <Button large v-if="waiting" data-test="cancel" @click="cancel">
+      Cancel
     </Button>
   </aside>
 </template>

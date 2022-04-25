@@ -84,14 +84,14 @@ describe("Matchmaker", () => {
       },
     });
 
+    await matchmaker.get('[data-test="5m"]').trigger("click");
+    await matchmaker.get('[data-test="play"]').trigger("click");
+
     socket.onmessage(
       new MessageEvent("message", {
         data: JSON.stringify({ type: "wait_for_match", payload: {} }),
       })
     );
-
-    await matchmaker.get('[data-test="5m"]').trigger("click");
-    await matchmaker.get('[data-test="play"]').trigger("click");
 
     await nextTick();
 
@@ -101,9 +101,7 @@ describe("Matchmaker", () => {
     expect(matchmaker.get('[data-test="10m"]').attributes()).toHaveProperty(
       "disabled"
     );
-    expect(matchmaker.get('[data-test="play"]').attributes()).toHaveProperty(
-      "disabled"
-    );
+    expect(matchmaker.find('[data-test="play"]').exists()).toBe(false);
   });
 
   it("enables buttons after cancelling match", async () => {
@@ -213,5 +211,65 @@ describe("Matchmaker", () => {
 
     await nextTick();
     expect(matchmaker.isVisible()).toBe(true);
+  });
+
+  it("displays cancel button, hides play button while waiting", async () => {
+    const socket = new FakeSocket();
+    const server = new Server(socket);
+    const matchmaker = mount(Matchmaker, {
+      props: {
+        server,
+        times: [
+          { duration: "5m", increment: "0s", label: "5 min" },
+          { duration: "10m", increment: "0s", label: "10 min" },
+        ],
+      },
+    });
+
+    await matchmaker.get('[data-test="5m"]').trigger("click");
+    await matchmaker.get('[data-test="play"]').trigger("click");
+
+    socket.onmessage(
+      new MessageEvent("message", {
+        data: JSON.stringify({ type: "wait_for_match", payload: {} }),
+      })
+    );
+
+    await nextTick();
+
+    expect(matchmaker.get('[data-test="cancel"]').isVisible()).toBe(true);
+    expect(matchmaker.find('[data-test="play"]').exists()).toBe(false);
+  });
+
+  it("sends cancel message to server", async () => {
+    const socket = new FakeSocket();
+    const server = new Server(socket);
+    const matchmaker = mount(Matchmaker, {
+      props: {
+        server,
+        times: [
+          { duration: "5m", increment: "0s", label: "5 min" },
+          { duration: "10m", increment: "0s", label: "10 min" },
+        ],
+      },
+    });
+
+    await matchmaker.get('[data-test="5m"]').trigger("click");
+    await matchmaker.get('[data-test="play"]').trigger("click");
+
+    socket.onmessage(
+      new MessageEvent("message", {
+        data: JSON.stringify({ type: "wait_for_match", payload: "uuid" }),
+      })
+    );
+
+    await nextTick();
+
+    const spy = vi.spyOn(server, "send");
+    await matchmaker.get('[data-test="cancel"]').trigger("click");
+
+    expect(spy).toHaveBeenCalledWith("dequeue");
+    expect(matchmaker.get('[data-test="play"]').isVisible()).toBe(true);
+    expect(matchmaker.find('[data-test="cancel"]').exists()).toBe(false);
   });
 });
