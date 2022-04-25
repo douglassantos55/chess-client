@@ -18,9 +18,11 @@ const inCheck = ref(false);
 const board = ref(createBoard());
 const selectedPiece = ref(null);
 const availableMoves = ref([]);
+const playing = ref(props.perspective == Color.White);
 
 if (props.server) {
   props.server.on("start_turn", function (payload) {
+    playing.value = true;
     const { from, to } = payload;
     const captured = board.value.move(from, to);
 
@@ -60,6 +62,9 @@ function showAvailableMoves() {
 }
 
 function selectedSquare({ piece, square }) {
+  if (!playing.value) {
+    return;
+  }
   if (selectedPiece.value && selectedPiece.value.piece) {
     if (!piece || piece.color != selectedPiece.value.piece.color) {
       Move(selectedPiece.value.square, square);
@@ -88,6 +93,7 @@ function Move(source: Square, dest: Square) {
     const captured = board.value.move(parseSquare(source), parseSquare(dest));
 
     if (props.server && props.gameId) {
+      playing.value = false;
       props.server.send("move_piece", {
         from: parseSquare(source),
         to: parseSquare(dest),

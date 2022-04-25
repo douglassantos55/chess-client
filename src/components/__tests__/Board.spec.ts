@@ -60,6 +60,8 @@ describe("Board", () => {
       props: { perspective: Color.Black },
     });
 
+    board.vm.playing = true;
+
     await board.get(".piece.black").trigger("click");
     await board.get(".square.a5").trigger("click");
 
@@ -74,6 +76,8 @@ describe("Board", () => {
     const board = mount(Board, {
       props: { perspective: Color.Black },
     });
+
+    board.vm.playing = true;
 
     await board.get(".piece.black").trigger("click");
     await board.get(".square.a5").trigger("click");
@@ -293,9 +297,10 @@ describe("Board", () => {
   });
 
   it("can block check", async () => {
-    const board = mount(Board);
+    const board = mount(Board, {
+      props: { perspective: Color.White },
+    });
 
-    await board.setProps({ perspective: Color.White });
     await board.get(".d2").trigger("click");
     await board.get(".d4").trigger("click");
 
@@ -338,9 +343,10 @@ describe("Board", () => {
   });
 
   it("can capture threatening piece", async () => {
-    const board = mount(Board);
+    const board = mount(Board, {
+      props: { perspective: Color.White },
+    });
 
-    await board.setProps({ perspective: Color.White });
     await board.get(".d2").trigger("click");
     await board.get(".d4").trigger("click");
 
@@ -370,9 +376,10 @@ describe("Board", () => {
   });
 
   it("can only move to squares that can block check", async () => {
-    const board = mount(Board);
+    const board = mount(Board, {
+      props: { perspective: Color.White },
+    });
 
-    await board.setProps({ perspective: Color.White });
     await board.get(".d2").trigger("click");
     await board.get(".d4").trigger("click");
 
@@ -397,9 +404,10 @@ describe("Board", () => {
   });
 
   it("cannot move pinned pieces", async () => {
-    const board = mount(Board);
+    const board = mount(Board, {
+      props: { perspective: Color.White },
+    });
 
-    await board.setProps({ perspective: Color.White });
     await board.get(".d2").trigger("click");
     await board.get(".d4").trigger("click");
 
@@ -437,11 +445,16 @@ describe("Board", () => {
 
   it("sends moves to server", async () => {
     const server = new Server(new FakeSocket());
-    const board = mount(Board, { props: { server, gameId: "aoeu" } });
+    const board = mount(Board, {
+      props: {
+        server,
+        gameId: "aoeu",
+        perspective: Color.White,
+      },
+    });
 
     const spy = vi.spyOn(server, "send");
 
-    await board.setProps({ perspective: Color.White });
     await board.get(".d2").trigger("click");
     await board.get(".d4").trigger("click");
 
@@ -454,7 +467,7 @@ describe("Board", () => {
 
   it("sends moves to server only if there is an active game", async () => {
     const server = new Server(new FakeSocket());
-    const board = mount(Board, { props: { server } });
+    const board = mount(Board, { props: { server, perspective: Color.White } });
 
     const spy = vi.spyOn(server, "send");
 
@@ -467,7 +480,7 @@ describe("Board", () => {
   it("receives moves from server", async () => {
     const socket = new FakeSocket();
     const server = new Server(socket);
-    const board = mount(Board, { props: { server } });
+    const board = mount(Board, { props: { server, perspective: Color.White } });
 
     socket.onmessage(
       new MessageEvent("message", {
@@ -492,8 +505,17 @@ describe("Board", () => {
 
   it("cannot move opponent pieces", async () => {
     const board = mount(Board, {
-      props: { perspective: Color.Black },
+      props: { perspective: Color.White },
     });
+
+    await board.get(".e7").trigger("click");
+    expect(board.findAll(".available")).toHaveLength(0);
+
+    await board.get(".e2").trigger("click");
+    expect(board.findAll(".available")).toHaveLength(2);
+
+    await board.trigger("contextmenu"); // clears moves
+    await board.setProps({ perspective: Color.Black });
 
     await board.get(".e2").trigger("click");
     expect(board.findAll(".available")).toHaveLength(0);
@@ -502,4 +524,40 @@ describe("Board", () => {
     expect(board.findAll(".available")).toHaveLength(2);
   });
 
+  it("cannot move pieces if it is not your turn", async () => {
+    const board = mount(Board, {
+      props: { perspective: Color.White },
+    });
+
+    await board.get(".e2").trigger("click");
+    expect(board.findAll(".available")).toHaveLength(2);
+
+    board.vm.playing = false;
+    await board.trigger("contextmenu"); // clears moves
+
+    await board.get(".e2").trigger("click");
+    expect(board.findAll(".available")).toHaveLength(0);
+  });
+
+  it("white starts turn", async () => {
+    const board = mount(Board, {
+      props: { perspective: Color.White },
+    });
+
+    expect(board.vm.playing).toBe(true);
+
+    await board.get(".e2").trigger("click");
+    expect(board.findAll(".available")).toHaveLength(2);
+  });
+
+  it("black does not start turn", async () => {
+    const board = mount(Board, {
+      props: { perspective: Color.Black },
+    });
+
+    expect(board.vm.playing).toBe(false);
+
+    await board.get(".e7").trigger("click");
+    expect(board.findAll(".available")).toHaveLength(0);
+  });
 });
