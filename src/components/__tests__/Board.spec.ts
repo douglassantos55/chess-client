@@ -157,6 +157,7 @@ describe("Board", () => {
     expect(board.get(".b3").find(".piece").exists()).to.be.false;
 
     await board.setProps({ perspective: Color.Black });
+    board.vm.playing = true;
 
     await board.get(".b8").trigger("click");
     await board.get(".b6").trigger("click");
@@ -176,6 +177,8 @@ describe("Board", () => {
     await board.get(".d4").trigger("click");
 
     await board.setProps({ perspective: Color.Black });
+    board.vm.playing = true;
+
     await board.get(".e7").trigger("click");
     await board.get(".e5").trigger("click");
 
@@ -184,6 +187,8 @@ describe("Board", () => {
     await board.get(".e5").trigger("click");
 
     await board.setProps({ perspective: Color.Black });
+    board.vm.playing = true;
+
     await board.get(".f8").trigger("click");
     await board.get(".c5").trigger("click");
 
@@ -198,6 +203,8 @@ describe("Board", () => {
     await board.get(".d4").trigger("click");
 
     await board.setProps({ perspective: Color.Black });
+    board.vm.playing = true;
+
     await board.get(".e7").trigger("click");
     await board.get(".e5").trigger("click");
 
@@ -206,6 +213,8 @@ describe("Board", () => {
     await board.get(".e5").trigger("click");
 
     await board.setProps({ perspective: Color.Black });
+    board.vm.playing = true;
+
     await board.get(".f8").trigger("click");
     await board.get(".b4").trigger("click");
 
@@ -225,6 +234,8 @@ describe("Board", () => {
     await board.get(".d4").trigger("click");
 
     await board.setProps({ perspective: Color.Black });
+    board.vm.playing = true;
+
     await board.get(".e7").trigger("click");
     await board.get(".e5").trigger("click");
 
@@ -233,6 +244,8 @@ describe("Board", () => {
     await board.get(".e5").trigger("click");
 
     await board.setProps({ perspective: Color.Black });
+    board.vm.playing = true;
+
     await board.get(".f8").trigger("click");
     await board.get(".b4").trigger("click");
 
@@ -248,6 +261,8 @@ describe("Board", () => {
     await board.get(".d4").trigger("click");
 
     await board.setProps({ perspective: Color.Black });
+    board.vm.playing = true;
+
     await board.get(".e7").trigger("click");
     await board.get(".e5").trigger("click");
 
@@ -259,6 +274,8 @@ describe("Board", () => {
     await board.get(".c3").trigger("click");
 
     await board.setProps({ perspective: Color.Black });
+    board.vm.playing = true;
+
     await board.get(".d4").trigger("click");
     await board.get(".c3").trigger("click");
 
@@ -280,6 +297,8 @@ describe("Board", () => {
     await board.get(".d4").trigger("click");
 
     await board.setProps({ perspective: Color.Black });
+    board.vm.playing = true;
+
     await board.get(".e7").trigger("click");
     await board.get(".e5").trigger("click");
 
@@ -288,6 +307,8 @@ describe("Board", () => {
     await board.get(".e5").trigger("click");
 
     await board.setProps({ perspective: Color.Black });
+    board.vm.playing = true;
+
     await board.get(".f8").trigger("click");
     await board.get(".b4").trigger("click");
 
@@ -305,6 +326,8 @@ describe("Board", () => {
     await board.get(".d4").trigger("click");
 
     await board.setProps({ perspective: Color.Black });
+    board.vm.playing = true;
+
     await board.get(".e7").trigger("click");
     await board.get(".e5").trigger("click");
 
@@ -313,6 +336,8 @@ describe("Board", () => {
     await board.get(".e5").trigger("click");
 
     await board.setProps({ perspective: Color.Black });
+    board.vm.playing = true;
+
     await board.get(".f8").trigger("click");
     await board.get(".b4").trigger("click");
 
@@ -351,6 +376,8 @@ describe("Board", () => {
     await board.get(".d4").trigger("click");
 
     await board.setProps({ perspective: Color.Black });
+    board.vm.playing = true;
+
     await board.get(".e7").trigger("click");
     await board.get(".e5").trigger("click");
 
@@ -359,6 +386,8 @@ describe("Board", () => {
     await board.get(".e5").trigger("click");
 
     await board.setProps({ perspective: Color.Black });
+    board.vm.playing = true;
+
     await board.get(".f8").trigger("click");
     await board.get(".b4").trigger("click");
 
@@ -367,6 +396,8 @@ describe("Board", () => {
     await board.get(".d2").trigger("click");
 
     await board.setProps({ perspective: Color.Black });
+    board.vm.playing = true;
+
     await board.get(".b4").trigger("click");
     await board.get(".d2").trigger("click");
 
@@ -384,6 +415,8 @@ describe("Board", () => {
     await board.get(".d4").trigger("click");
 
     await board.setProps({ perspective: Color.Black });
+    board.vm.playing = true;
+
     await board.get(".e7").trigger("click");
     await board.get(".e5").trigger("click");
 
@@ -392,6 +425,8 @@ describe("Board", () => {
     await board.get(".e5").trigger("click");
 
     await board.setProps({ perspective: Color.Black });
+    board.vm.playing = true;
+
     await board.get(".f8").trigger("click");
     await board.get(".b4").trigger("click");
 
@@ -412,6 +447,8 @@ describe("Board", () => {
     await board.get(".d4").trigger("click");
 
     await board.setProps({ perspective: Color.Black });
+    board.vm.playing = true;
+
     await board.get(".e7").trigger("click");
     await board.get(".e5").trigger("click");
 
@@ -420,6 +457,8 @@ describe("Board", () => {
     await board.get(".e5").trigger("click");
 
     await board.setProps({ perspective: Color.Black });
+    board.vm.playing = true;
+
     await board.get(".f8").trigger("click");
     await board.get(".b4").trigger("click");
 
@@ -517,6 +556,8 @@ describe("Board", () => {
     await board.trigger("contextmenu"); // clears moves
     await board.setProps({ perspective: Color.Black });
 
+    board.vm.playing = true;
+
     await board.get(".e2").trigger("click");
     expect(board.findAll(".available")).toHaveLength(0);
 
@@ -559,5 +600,17 @@ describe("Board", () => {
 
     await board.get(".e7").trigger("click");
     expect(board.findAll(".available")).toHaveLength(0);
+  });
+
+  it("updates playing according to perspective", async () => {
+    const board = mount(Board, {
+      props: { perspective: Color.White },
+    });
+
+    expect(board.vm.playing).toBe(true);
+
+    await board.setProps({ perspective: Color.Black });
+
+    expect(board.vm.playing).toBe(false);
   });
 });

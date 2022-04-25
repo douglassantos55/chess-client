@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { Server } from "@/server";
+import { Color } from "@/types";
 
 const props = defineProps<{
   server: Server;
 }>();
 
 const gameId = ref(null);
-const perspective = ref("white");
+const perspective = ref(Color.White);
 
 props.server.on("start_game", (payload) => {
   gameId.value = payload.game_id;

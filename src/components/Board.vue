@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import Square from "@/components/Square.vue";
 import { parseSquare, playSound, createBoard } from "@/utils";
 import { Color } from "@/types";
@@ -19,6 +19,13 @@ const board = ref(createBoard());
 const selectedPiece = ref(null);
 const availableMoves = ref([]);
 const playing = ref(props.perspective == Color.White);
+
+watch(
+  () => props.perspective,
+  (perspective) => {
+    playing.value = perspective == Color.White;
+  }
+);
 
 if (props.server) {
   props.server.on("start_turn", function (payload) {
