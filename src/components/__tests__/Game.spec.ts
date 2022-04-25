@@ -4,6 +4,7 @@ import Game from "@/components/Game.vue";
 import FakeSocket from "./FakeSocket";
 import Server from "@/server";
 import { nextTick } from "vue";
+import { Color } from "@/types";
 
 describe("Game", () => {
   it("starts", async () => {
@@ -342,5 +343,61 @@ describe("Game", () => {
 
     await game.get('[data-test="resign"]').trigger("click");
     expect(spy).toHaveBeenCalledWith("resign", "uuid");
+  });
+
+  it("starts white's timer on game start", async () => {
+    const socket = new FakeSocket();
+    const server = new Server(socket);
+    const game = mount(Game, { props: { server } });
+
+    socket.onmessage(
+      new MessageEvent("message", {
+        data: JSON.stringify({
+          type: "start_game",
+          payload: {
+            color: Color.White,
+            game_id: "uuid",
+            time_control: {
+              duration: "3m",
+              increment: "0s",
+            },
+          },
+        }),
+      })
+    );
+
+    await nextTick();
+    await new Promise((res) => setTimeout(res, 2000));
+
+    await nextTick();
+    expect(game.get(".timer").html()).not.toContain("3:00");
+  });
+
+  it("does not start black's timer on game start", async () => {
+    const socket = new FakeSocket();
+    const server = new Server(socket);
+    const game = mount(Game, { props: { server } });
+
+    socket.onmessage(
+      new MessageEvent("message", {
+        data: JSON.stringify({
+          type: "start_game",
+          payload: {
+            color: Color.Black,
+            game_id: "uuid",
+            time_control: {
+              duration: "3m",
+              increment: "0s",
+            },
+          },
+        }),
+      })
+    );
+
+    await nextTick();
+    await new Promise((res) => setTimeout(res, 2000));
+
+    await nextTick();
+    expect(game.get(".timer").html()).toContain("3:00");
   });
 });

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, nextTick } from "vue";
 import { Server } from "@/server";
 import { Color } from "@/types";
 import Timer from "./Timer.vue";
@@ -31,6 +31,14 @@ props.server.on("start_game", (payload) => {
   gameId.value = payload.game_id;
   perspective.value = payload.color;
   timeControl.value = payload.time_control;
+
+  nextTick(() => {
+    if (payload.color == Color.White) {
+      timer.value?.start();
+    } else {
+      opponentTimer.value?.start();
+    }
+  });
 });
 
 props.server.on("game_over", () => {
