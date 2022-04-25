@@ -35,5 +35,12 @@ export default class implements Server {
 
   send(type: string, payload: Record<string, unknown>) {
     this.socket.send(JSON.stringify({ type, payload }));
+    const listeners = this.listeners[type];
+
+    if (listeners) {
+      for (const listener of listeners) {
+        listener(payload);
+      }
+    }
   }
 }

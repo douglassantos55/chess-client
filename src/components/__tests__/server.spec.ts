@@ -48,4 +48,16 @@ describe("Server", () => {
 
     expect(receive).not.toThrow();
   });
+
+  it("dispatches event when sending to server", () => {
+    expect.assertions(1);
+
+    const server = new Server(new FakeSocket());
+
+    server.on("move_piece", (payload) =>
+      expect(payload).toEqual({ from: "a1", to: "a4" })
+    );
+
+    server.send("move_piece", { from: "a1", to: "a4" });
+  });
 });
