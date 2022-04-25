@@ -315,4 +315,32 @@ describe("Game", () => {
     await nextTick();
     expect(spy).toHaveBeenCalledOnce();
   });
+
+  it("resigns", async () => {
+    const socket = new FakeSocket();
+    const server = new Server(socket);
+    const game = mount(Game, { props: { server } });
+
+    socket.onmessage(
+      new MessageEvent("message", {
+        data: JSON.stringify({
+          type: "start_game",
+          payload: {
+            color: "white",
+            game_id: "uuid",
+            time_control: {
+              duration: "6s",
+              increment: "0s",
+            },
+          },
+        }),
+      })
+    );
+
+    await nextTick();
+    const spy = vi.spyOn(server, "send");
+
+    await game.get('[data-test="resign"]').trigger("click");
+    expect(spy).toHaveBeenCalledWith("resign", "uuid");
+  });
 });
