@@ -68,7 +68,7 @@ function selectedSquare({ piece, square }) {
       selectedPiece.value = { piece, square };
       showAvailableMoves();
     }
-  } else if (piece) {
+  } else if (piece && piece.color == props.perspective) {
     selectedPiece.value = { piece, square };
     showAvailableMoves();
   }
