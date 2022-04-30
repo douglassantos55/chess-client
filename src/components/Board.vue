@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import Square from "@/components/Square.vue";
-import { parseSquare, playSound, createBoard } from "@/utils";
+import { parseNotation, parseSquare, playSound, createBoard } from "@/utils";
 import { Color } from "@/types";
 import Server from "@/server";
 import moveAudio from "../assets/move.webm";
 import captureAudio from "../assets/capture.webm";
 import checkAudio from "../assets/move-check.webm";
+import List from "@/list";
 
 const props = defineProps<{
   server?: Server;
@@ -14,6 +15,7 @@ const props = defineProps<{
   perspective?: Color;
 }>();
 
+const moveHistory = new List();
 const inCheck = ref(false);
 const board = ref(createBoard());
 const selectedPiece = ref(null);
@@ -32,21 +34,21 @@ watch(
   (gameId) => {
     if (gameId) {
       board.value = createBoard();
+      moveHistory.clear();
     }
   }
 );
+
+moveHistory.subscribe(() => {
+  const last = moveHistory.peek();
+  last && MovePiece(last.from, last.to);
+});
 
 if (props.server) {
   props.server.on("start_turn", function (payload) {
     playing.value = true;
     const { from, to } = payload;
-    const captured = board.value.move(from, to);
-
-    if (captured) {
-      playSound(captureAudio);
-    } else {
-      playSound(moveAudio);
-    }
+    moveHistory.push({ from, to });
   });
 }
 
@@ -100,24 +102,12 @@ function clearSelected() {
   availableMoves.value = [];
 }
 
-function Move(source: Square, dest: Square) {
-  const available = availableMoves.value.find(
-    (square: Square) => square.col == dest.col && square.row == dest.row
-  );
+function MovePiece(source, dest) {
+  const piece = board.value.piece(parseNotation(source));
+  const captured = board.value.move(source, dest);
 
-  if (available) {
-    const captured = board.value.move(parseSquare(source), parseSquare(dest));
-
-    if (props.server && props.gameId) {
-      playing.value = false;
-      props.server.send("move_piece", {
-        from: parseSquare(source),
-        to: parseSquare(dest),
-        game_id: props.gameId,
-      });
-    }
-
-    checkForCheck(selectedPiece.value.piece.color);
+  if (piece) {
+    checkForCheck(piece.color);
 
     if (!inCheck.value) {
       if (captured) {
@@ -125,6 +115,29 @@ function Move(source: Square, dest: Square) {
       } else {
         playSound(moveAudio);
       }
+    }
+  }
+}
+
+function Move(source: Square, dest: Square) {
+  const available = availableMoves.value.find(
+    (square: Square) => square.col == dest.col && square.row == dest.row
+  );
+
+  if (available) {
+    moveHistory.push({
+      from: parseSquare(source),
+      to: parseSquare(dest),
+    });
+
+    if (props.server && props.gameId) {
+      playing.value = false;
+
+      props.server.send("move_piece", {
+        from: parseSquare(source),
+        to: parseSquare(dest),
+        game_id: props.gameId,
+      });
     }
   }
 }
@@ -146,12 +159,30 @@ function checkForCheck(color: Color) {
     playSound(checkAudio);
   }
 }
+
+function navigate(evt) {
+  if (evt.key === "ArrowLeft") {
+    if (moveHistory.curr) {
+      const move = moveHistory.curr.data;
+      MovePiece(move.to, move.from);
+      moveHistory.prev();
+    }
+  } else if (evt.key === "ArrowRight") {
+    if (moveHistory.curr) {
+      const move = moveHistory.curr.data;
+      MovePiece(move.from, move.to);
+      moveHistory.next();
+    }
+  }
+}
 </script>
 
 <template>
   <div
+    tabindex="0"
     :class="['board', props.perspective]"
     @contextmenu.prevent="clearSelected"
+    @keydown="navigate"
   >
     <div
       class="row"

@@ -647,4 +647,102 @@ describe("Board", () => {
     expect(board.get(".e2").find(".piece").exists()).toBe(false);
     expect(board.get(".e4").find(".piece").exists()).toBe(true);
   });
+
+  it("pushes moves to list", async () => {
+    const board = mount(Board, {
+      props: { perspective: Color.White },
+    });
+
+    await board.get(".e2").trigger("click");
+    await board.get(".e4").trigger("click");
+
+    await board.get(".g1").trigger("click");
+    await board.get(".f3").trigger("click");
+
+    expect(board.vm.moveHistory.pop()).toEqual({ from: "g1", to: "f3" });
+    expect(board.vm.moveHistory.pop()).toEqual({ from: "e2", to: "e4" });
+  });
+
+  it("navigates through move history", async () => {
+    const board = mount(Board, {
+      props: { perspective: Color.White },
+    });
+
+    await board.get(".e2").trigger("click");
+    await board.get(".e4").trigger("click");
+
+    await board.get(".d2").trigger("click");
+    await board.get(".d4").trigger("click");
+
+    await board.get(".g1").trigger("click");
+    await board.get(".f3").trigger("click");
+
+    expect(board.get(".e4").find(".piece").exists()).toBe(true);
+    expect(board.get(".d4").find(".piece").exists()).toBe(true);
+    expect(board.get(".f3").find(".piece").exists()).toBe(true);
+
+    await board.trigger("keydown", { key: "ArrowLeft" });
+    expect(board.get(".f3").find(".piece").exists()).toBe(false);
+
+    await board.trigger("keydown", { key: "ArrowLeft" });
+    expect(board.get(".d4").find(".piece").exists()).toBe(false);
+
+    await board.trigger("keydown", { key: "ArrowLeft" });
+    expect(board.get(".e4").find(".piece").exists()).toBe(false);
+
+    await board.trigger("keydown", { key: "ArrowLeft" });
+    expect(board.get(".e4").find(".piece").exists()).toBe(false);
+
+    await board.trigger("keydown", { key: "ArrowRight" });
+    expect(board.get(".e4").find(".piece").exists()).toBe(true);
+
+    await board.trigger("keydown", { key: "ArrowRight" });
+    expect(board.get(".d4").find(".piece").exists()).toBe(true);
+
+    await board.trigger("keydown", { key: "ArrowRight" });
+    expect(board.get(".f3").find(".piece").exists()).toBe(true);
+  });
+
+  it("pushes moves received from server to list", async () => {
+    const socket = new FakeSocket();
+    const server = new Server(socket);
+    const board = mount(Board, { props: { server, perspective: Color.Black } });
+
+    socket.onmessage(
+      new MessageEvent("message", {
+        data: JSON.stringify({
+          type: "start_turn",
+          payload: {
+            from: "e2",
+            to: "e4",
+            game_id: "arandomuuid",
+            time: 3000000,
+          },
+        }),
+      })
+    );
+
+    await nextTick();
+
+    expect(board.vm.moveHistory.pop()).toEqual({ from: "e2", to: "e4" });
+
+    expect(board.get(".e2").find(".piece").exists()).toBe(false);
+    expect(board.get(".e4").find(".piece").text()).toContain("p");
+    expect(board.get(".e4").find(".piece").classes()).toContain("white");
+  });
+
+  it("resets move histroy when game ID changes", async () => {
+    const board = mount(Board, {
+      props: { perspective: Color.White },
+    });
+
+    await board.get(".e2").trigger("click");
+    await board.get(".e4").trigger("click");
+
+    await board.get(".g1").trigger("click");
+    await board.get(".f3").trigger("click");
+
+    await board.setProps({ gameId: "uuid" });
+    expect(board.vm.moveHistory.pop()).toBe(undefined);
+  });
 });
