@@ -50,8 +50,8 @@ function select() {
 
 <style scoped>
 .square {
-  width: 82px;
-  height: 82px;
+  width: 72px;
+  height: 72px;
   display: flex;
   position: relative;
   align-items: center;
