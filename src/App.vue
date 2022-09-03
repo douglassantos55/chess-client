@@ -28,11 +28,14 @@ const server = new Server(new WebSocket("ws://0.0.0.0:8080"));
 <style>
 body {
   margin: 0;
+  height: 100%;
+  min-height: 100vh;
 }
 #app {
+  height: 100%;
   display: flex;
-  height: 100vh;
   background: #222;
+  min-height: 100vh;
   font-family: sans-serif;
 }
 </style>
